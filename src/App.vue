@@ -1,81 +1,158 @@
 <template>
-    <div id="app">
-        <router-view v-bind:isFooter="isFooter" v-bind:footer="footer" v-on:title="is_show_footer($event)" />
-        <div id="footer" v-if="isFooter">
-            <div>
-                <router-link to="/" :xcq="footer" @click.native="footer = 'shouye'" :data="footer" v-bind:class="footer == 'shouye' ? 'active' : ''">首页</router-link>
-            </div>
-            <div>
-                <router-link to="/FenLei" @click.native="footer = 'fenlei'" v-bind:class="footer == 'fenlei' ? 'active' : ''">分类</router-link>
-            </div>
-            <div>
-                <router-link to="/GouWuChe" @click.native="footer = 'gouwuche'" v-bind:class="footer == 'gouwuche' ? 'active' : ''">购物车</router-link>
-            </div>
-            <div>
-                <router-link to="/WoDe" @click.native="footer = 'wode'" v-bind:class="footer == 'wode' ? 'active' : ''">我的</router-link>
+  <div id="app">
+    <keep-alive>
+      <router-view></router-view>
+    </keep-alive>
+    <popup v-model="showVideo" height="100%" style="background: rgba(0,0,0,0.8);" @on-hide="closeVideoModal" @on-show="openVideoModal">
+        <!-- <div class="showVideo">
+            <x-header class="pst" style="background-color: transparent;" :left-options="{showBack: false}">
+                
+            </x-header>
+        </div> -->
+        <div class="main">
+            <div class="modal-video" :class="isFullScreen?'active':''">
+                <a slot="right" @click="goBack" class="iconfont icon-tainjia-copy close"></a>
+                <video class="video" ref="modalVideo" @loadedmetadata="loadVideo" @timeupdate="timeupdate" @play="play" @pause="pause"
+                    controls :src="videoUrl" :poster="videoImg"></video>
+                <!-- <span v-show="paused" @click="playVideo" class="play-btn"><i class="iconfont icon-bofang"></i></span>
+                <span v-show="!paused" @click="pauseVideo" class="play-btn"><i class="iconfont icon-weibiaoti519"></i></span> -->
+                <i v-show="!isFullScreen" @click="fullScreen" class="iconfont icon-quanping full-screen"></i>
+                <i v-show="isFullScreen" @click="exitFullScreen" class="iconfont icon-icon--1 full-screen"></i>
             </div>
         </div>
-    </div>
+    </popup>
+    <popup v-model="showPicture" class="pictureviewer" height="100%" @on-show="openPictureModal">
+        <a class="iconfont icon-tainjia-copy close" @click="closePictire"></a>
+        <swiper :options="swiperOption" ref="mySwiper" class="picture-swiper">
+            <!-- slides -->
+            <swiper-slide v-for="(item, index) in pictureList" :key="index">
+                <div class="swiper-zoom-container">
+                    <img :src="item">
+                </div>
+            </swiper-slide>
+            <div class="swiper-pagination"  slot="pagination"></div>
+        </swiper>
+    </popup>
+  </div>
 </template>
 
 <script>
+import { mapState, mapActions, mapMutations } from 'vuex'
+import {Popup, XHeader, Cell} from 'vux'
 export default {
-  data () {
+  name: 'app',
+  components: {
+      Popup,
+      XHeader,
+      Cell,
+  },
+  computed: {
+    ...mapState(['showVideo', "videoUrl", "videoImg", "showPicture", "pictureList"]),
+  },
+  data(){
     return {
-      footer: 'shouye',
-      isFooter: true
+      // showVideo: this.$store.state.showVideo,
+      // videoUrl: this.$store.state.videoUrl,
+      // videoImg: this.$store.state.videoImg,
+      isFullScreen: false,    //  是否全屏
+      paused: true,
+      swiperOption: {
+            pagination: {
+                el: '.swiper-pagination',
+                type: 'fraction',
+            },
+            zoom: {
+                toggle: false,
+            },
+        }               
     }
   },
   methods: {
-    is_show_footer (msg) {
-      this.isFooter = this.GLOBAL.isFooter
-    }
-  }
+    //  加载完视频
+    loadVideo(e){  
+    },
+    //  播放按钮
+    playVideo(){
+        this.$refs.modalVideo.play()
+    },
+    play(e){
+        this.paused = this.$refs.modalVideo.paused
+    },
+    //  暂停按钮
+    pauseVideo(){
+        this.$refs.modalVideo.pause()
+    },
+    pause(e){
+        this.paused = this.$refs.modalVideo.paused
+    },
+    //  播放中
+    timeupdate(e){
+        if(!this.isChange){
+            this.value = this.$refs.modalVideo.currentTime*10
+        }
+    },
+
+    //  控制条改变
+    onTouchstart () {
+        this.isChange = true
+    },
+    onTouchend () {
+        let video = document.getElementsByClassName("video")[0]
+        video.currentTime = this.value/10
+        this.isChange = false
+    },
+    //  全屏显示
+    fullScreen(){
+        this.isFullScreen = true
+    },
+    exitFullScreen(){
+        this.isFullScreen = false
+    },
+    goBack(){
+      this.$store.state.showVideo = false
+    },
+    ended(e){
+        e.target.nextElementSibling.setAttribute('style', 'display: block')
+    },
+    //  视频加载错误
+    videoError(index){
+        this.contentShowList[index].isError = true
+        this.contentShowList[index].videoImg = null
+    },
+    openVideo(videoUrl, videoImg, index){
+        this.videoPlayIndex = index
+        this.videoUrl = videoUrl
+        this.videoImg = videoImg
+        this.showVideo = true
+    },
+    //  打开视频弹框
+    openVideoModal(){
+        setTimeout(() => {
+            this.$refs.modalVideo.play()
+        }, 200)
+    },
+    //  关闭视频弹框
+    closeVideoModal(){
+        console.log(this.$refs.modalVideo)
+        this.$refs.modalVideo.pause()
+    },
+
+
+    //  打开图片弹框
+    openPictureModal(){
+        this.$refs.mySwiper.swiper.slideTo(this.$store.state.pictureIndex)
+    },
+    //  关闭图片弹框
+    closePictire(){
+        this.$store.state.showPicture = false
+    },
+  },
 }
 </script>
 
-<style>
-    * {
-        padding: 0;
-        margin: 0;
-    }
-    a {
-        cursor: pointer;
-        text-decoration: none;
-    }
-    html,
-    body {
-        width: 100%;
-        height: 100%;
-        background: #fff;
-        color: #666;
-    }
-    #app {
-        font-family: 'Avenir', Helvetica, Arial, sans-serif;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        width: 100%;
-        height: 100%;
-    }
-    #footer {
-        height: 50px;
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        border-top: 1px solid #ccc;
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-        align-items: center;
-        text-align: center;
-    }
-    #footer div {
-        flex: 1;
-    }
-    #footer div a {
-        color: #666;
-    }
-    #footer div a.active {
-        color: red;
-    }
+
+<style lang="less">
+@import '~vux/src/styles/reset.less';
+@import './style/base.less';
+@import 'swiper/dist/css/swiper.css';
 </style>
