@@ -55,6 +55,7 @@
             }
         },
         activated(){
+            this.$vux.loading.show()
             this.getgreatmanlist(this.greatManType)
         },
         methods: {
@@ -74,7 +75,7 @@
             follow(id, index){
                 if(!this.$store.state.towerUserId){
                     this.toastSuccess("请先登录")
-                    this.$router.push("./login")
+                    this.login()
                     return
                 }
                 let params = new FormData()

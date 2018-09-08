@@ -3,16 +3,10 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-const HelloFromVux = r => require.ensure([], () => r(require('@/components/HelloFromVux')), 'HelloFromVux');
-const test = r => require.ensure([], () => r(require('@/pages/test')), 'test');
-const test1 = r => require.ensure([], () => r(require('@/pages/test1')), 'test1');
-const test2 = r => require.ensure([], () => r(require('@/pages/test2')), 'test2');
-const test3 = r => require.ensure([], () => r(require('@/pages/test3')), 'test3');
-const test4 = r => require.ensure([], () => r(require('@/pages/test4')), 'test4');
-const test5 = r => require.ensure([], () => r(require('@/pages/test5')), 'test5');
-const test_video = r => require.ensure([], () => r(require('@/pages/test_video')), 'test_video');
-const testJava = r => require.ensure([], () => r(require('@/pages/testJava')), 'testJava');
 const share = r => require.ensure([], () => r(require('@/pages/share')), 'share');
+//  我的简历
+const resume = r => require.ensure([], () => r(require('@/pages/resume')), 'resume');
+const share_resume = r => require.ensure([], () => r(require('@/pages/share_resume')), 'share_resume');
 const download = r => require.ensure([], () => r(require('@/pages/download')), 'download');
 const login = r => require.ensure([], () => r(require('@/pages/login')), 'login');
 const index = r => require.ensure([], () => r(require('@/pages/index')), 'index');
@@ -86,8 +80,7 @@ const education_info = r => require.ensure([], () => r(require('@/pages/educatio
 
 
 
-//  注册
-const register = r => require.ensure([], () => r(require('@/pages/register')), 'register');
+
 //  忘记密码
 const forget_password = r => require.ensure([], () => r(require('@/pages/forget_password')), 'forget_password');
 //  完善资料
@@ -100,57 +93,24 @@ const bit_detail = r => require.ensure([], () => r(require('@/pages/bit_detail')
 const bit_manage = r => require.ensure([], () => r(require('@/pages/bit_manage')), 'bit_manage');
 
 
-
-//  发布文字
-const publish_text = r => require.ensure([], () => r(require('@/pages/publish_text')), 'publish_text');
-//  发布视频
-const publish_video = r => require.ensure([], () => r(require('@/pages/publish_video')), 'publish_video');
-//  发布图片
-const publish_picture = r => require.ensure([], () => r(require('@/pages/publish_picture')), 'publish_picture');
-//  发布技能
-const publish_skill = r => require.ensure([], () => r(require('@/pages/publish_skill')), 'publish_skill');
 //  发布小课
 const smallClass = r => require.ensure([], () => r(require('@/pages/smallClass')), 'smallClass');
 //  发布文章
 const article = r => require.ensure([], () => r(require('@/pages/article')), 'article');
+//  发布文章
+const publish_article = r => require.ensure([], () => r(require('@/pages/publish_article')), 'publish_article');
+//  文章详情
+const article_detail = r => require.ensure([], () => r(require('@/pages/article_detail')), 'article_detail');
 
 const routes = [
   {
-    path: '/',
-    name: 'HelloFromVux',
-    component: HelloFromVux
+    path: '/share_resume',
+    name: 'share_resume',
+    component: share_resume
   },{
-    path: '/testJava',
-    name: 'testJava',
-		component: testJava
-  },{
-    path: '/test_video',
-    name: 'test_video',
-		component: test_video
-  },{
-    path: '/test5',
-    name: 'test5',
-		component: test5
-  },{
-    path: '/test4',
-    name: 'test4',
-		component: test4
-  },{
-    path: '/test3',
-    name: 'test3',
-		component: test3
-  },{
-    path: '/test2',
-    name: 'test2',
-		component: test2
-  },{
-    path: '/test1',
-    name: 'test1',
-		component: test1
-  },{
-    path: '/test',
-    name: 'test',
-		component: test
+    path: '/resume',
+    name: 'resume',
+		component: resume
 	},{
     path: '/share',
     name: 'share',
@@ -280,10 +240,6 @@ const routes = [
     name: 'education_info',
 		component: education_info
 	},{
-    path: '/register',
-    name: 'register',
-		component: register
-	},{
     path: '/forget_password',
     name: 'forget_password',
 		component: forget_password
@@ -300,22 +256,6 @@ const routes = [
     name: 'bit_manage',
 		component: bit_manage
 	},{
-    path: '/publish_text',
-    name: 'publish_text',
-		component: publish_text
-	},{
-    path: '/publish_video',
-    name: 'publish_video',
-		component: publish_video
-	},{
-    path: '/publish_picture',
-    name: 'publish_picture',
-		component: publish_picture
-	},{
-    path: '/publish_skill',
-    name: 'publish_skill',
-		component: publish_skill
-	},{
     path: '/smallClass',
     name: 'smallClass',
 		component: smallClass
@@ -323,6 +263,14 @@ const routes = [
     path: '/article',
     name: 'article',
 		component: article
+	},{
+    path: '/publish_article',
+    name: 'publish_article',
+		component: publish_article
+	},{
+    path: '/article_detail',
+    name: 'article_detail',
+		component: article_detail
 	},{
     path: '/index',
     name: '',
@@ -350,7 +298,6 @@ const routes = [
 ]
 
 export default new Router({
-  base:'/tower/',
 	mode: 'history',
   routes,
 })

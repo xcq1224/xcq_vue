@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <keep-alive>
-      <router-view></router-view>
+      <router-view v-if="isRouterAlive"></router-view>
     </keep-alive>
     <popup v-model="showVideo" height="100%" style="background: rgba(0,0,0,0.8);" @on-hide="closeVideoModal" @on-show="openVideoModal">
         <!-- <div class="showVideo">
@@ -47,7 +47,7 @@ export default {
       Cell,
   },
   computed: {
-    ...mapState(['showVideo', "videoUrl", "videoImg", "showPicture", "pictureList"]),
+    ...mapState(['showVideo', "videoUrl", "videoImg", "showPicture", "pictureList", "isRouterAlive"]),
   },
   data(){
     return {
@@ -145,6 +145,8 @@ export default {
     //  关闭图片弹框
     closePictire(){
         this.$store.state.showPicture = false
+        this.$store.state.pictureList = []
+        this.$store.state.pictureIndex = 0
     },
   },
 }
@@ -155,4 +157,5 @@ export default {
 @import '~vux/src/styles/reset.less';
 @import './style/base.less';
 @import 'swiper/dist/css/swiper.css';
+@import "./style/iconfont.css";
 </style>

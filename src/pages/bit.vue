@@ -1,43 +1,133 @@
 <template>
     <div class="page"> 
         <x-header class="pst" :left-options="{showBack: false}">我的点滴
-            <!-- <router-link to="./bit_manage" slot="right"><i style="font-size: 24px;" class="iconfont icon-icon-"></i></router-link> -->
-            <a slot="right" @click="show1=true"><i style="font-size: 24px;" class="iconfont icon-icon-"></i></a>
+            <span slot="right">
+                <router-link to="./resume">生成履历</router-link>
+                <icon style="font-size: 18px;vertical-align: text-top; color: #fff;" type="search" @click.native.stop="popup5 = true"></icon>   
+            </span>
         </x-header>
         <div class="main">
             <scroller v-show="dribKindList.length>5" lock-y :scrollbar-x=false>
-                <div class="box1" :style="'width: '+ 22*dribKindList.length +'vw;'">
-                    <div class="ability-item" v-for="(item, index) in dribKindList" :key="index" @click="getDribByKind(item.dribKindId)">
+                <div class="box1" :style="'width: '+ 22*(dribKindList.length + 1) +'vw;'">
+                    <div class="ability-item" v-for="(item, index) in dribKindList" :key="index" @click="getDribByKind(item.dribKindId, item.dribKindName, item.dribKindDetail)">
                         <p>{{item.dribKindName || '默认分类'}}</p>
                         <p class="num">{{item.dribKindNum}}</p>
+                    </div>
+                    <div class="ability-item">
+                        <p class="follow-more text-base" style="position: relative; top: 10px;" @click="show1 = true">●●●</p>
                     </div>
                 </div>
             </scroller>
             <scroller v-show="!isEmpty" use-pullup :pullup-config="pullupDefaultConfig" @on-pullup-loading="loadMore"
                 use-pulldown :pulldown-config="pulldownDefaultConfig" @on-pulldown-loading="refresh"
-                lock-x ref="scrollerBottom" height="-182" @on-scroll="onScroll">
+                lock-x ref="scrollerBottom" height="-172" @on-scroll="onScroll">
                 <div>
+                    <div v-show="!dribKindDetail" @click="popup0 = true">
+                        <div class="desc-info" v-show="dribKindName == '基本信息'">
+                            <p>姓名：</p>
+                            <p>性别：</p>
+                            <p>出生日期：</p>
+                            <p>学校：</p>
+                            <p>专业：</p>
+                            <p>学历：</p>
+                            <p>入学时间：</p>
+                            <p>用一个词来形容自己：</p>
+                        </div>
+                        <div class="desc-info" v-show="dribKindName == '日常点滴'">
+                            <p>我爱好记录生活，你也可以在我的生活中更好的认识我</p>
+                        </div>
+                        <div class="desc-info" v-show="dribKindName == '技能变现'">
+                            <p>我擅长的技能有这些：</p>
+                            <p>技能1：</p>
+                            <p>技能2：</p>
+                        </div>
+                        <div class="desc-info" v-show="dribKindName == '技能学习'">
+                            <p>我注重生活技能的提升，这些是我学过和正在学习的技能：</p>
+                            <p>学习1：</p>
+                            <p>学习2：</p>
+                        </div>
+                        <div class="desc-info" v-show="dribKindName == '文学创作'">
+                            <p>写文章，是我的爱好，时不时发表一下想法让我觉得很愉快</p>
+                        </div>
+                        <div class="desc-info" v-show="dribKindName == '校园生活'">
+                            <p>简单梳理一下自己的教育经历：</p>
+                            <p>xx年xx月-xx年xx月  xx高中</p>
+                            <p>xx年xx月-xx年xx月  xx大学    xx专业   xx学历</p>
+                            <p>xx年xx月-xx年xx月  xx大学    xx专业   xx学历</p>
+                            <p>美好的校园生活，我将它们在这里封存</p>
+                        </div>
+                        <div class="desc-info" v-show="dribKindName == '学业成绩'">
+                            <p>关于专业成绩，我可以用不错来形容：</p>
+                            <p>GPA：</p>
+                        </div>
+                        <div class="desc-info" v-show="dribKindName == '工作经验'">
+                            <p>在工作经验，我对自己的职业发展是很负责任的，待过的公司都帮助我收获了巨大的成长：</p>
+                            <p>xx年xx月-xx年xx月  xx公司    xx职务</p>
+                            <p>xx年xx月-xx年xx月  xx公司    xx职务</p>
+                        </div>
+                        <div class="desc-info" v-show="dribKindName == '项目经验'">
+                            <p>这些是我参与过的项目和取得的成绩：</p>
+                            <p>xx年xx月-xx年xx月 xx项目  xx角色     xx成绩</p>
+                            <p>xx年xx月-xx年xx月 xx项目  xx角色     xx成绩</p>
+                        </div>
+                        <div class="desc-info" v-show="dribKindName == '实践经验'">
+                            <p>我注重将所学知识与实践应用的结合，在校期间参与过以下实践活动：</p>
+                            <p>xx年xx月-xx年xx月 xx活动  xx成绩</p>
+                            <p>xx年xx月-xx年xx月 xx活动  xx成绩</p>
+                        </div>
+                        <div class="desc-info" v-show="dribKindName == '兴趣爱好'">
+                            <p>我闲暇时间是这么安排的，做这些事让我轻松：</p>
+                            <p>兴趣1:</p>
+                            <p>兴趣2:</p>
+                        </div>
+                        <div class="desc-info" v-show="dribKindName == '个人评价'">
+                            <p>用一句话来描述我自己，我觉得是：</p>
+                        </div>
+                    </div>
+                    <div class="desc-info" v-show="dribKindDetail" @click="popup0 = true">
+                        <p>{{dribKindDetail}}</p>
+                    </div>
+                    <div style="height: 15px;"></div>
                     <div class="hot-card" @click="toDetail(item.towerContentId, item.contentType)" v-for="(item, index) in contentShowList" :key="index">
                         <div v-show="item.title" class="card-title text-ellipsis">{{item.title}}</div>
-                        <div v-show="item.content" class="card-desc" :class="item.contentType == '0'? 'text-ellipsis12':'text-ellipsis2'">{{item.content}}</div>
+                        <div v-show="item.content && item.contentType != 6" class="card-desc" :class="item.contentType == '0'? 'text-ellipsis12':'text-ellipsis2'">{{item.content}}</div>
                         <div v-if="item.contentType == 2 || item.contentType == 3" class="video-box">
                             <img :src="item.videoImg" alt="" class="video-img">
                             <span class="play-btn iconfont icon-bofang" @click.stop="openVideo(item.videoUrl, item.videoImg)"></span>
                         </div>
-                        <div v-if="item.contentType == 1" class="picture-box">
-                            <img :src="item.imgUrl_1" alt="">
+                        <!-- 图片 -->
+                        <div v-if="item.imgUrls.length" class="thumbnail-box">
+                            <div v-if="item.imgUrls.length > 1" class="thumbnail" :style="{backgroundImage: 'url(' + imgItem + ')' }" 
+                                v-for="(imgItem, imgIndex) in item.imgUrls" :key="imgIndex" @click.stop="viewPicture(item.imgUrls, imgIndex)"></div>
+                            <div v-if="item.imgUrls.length == 1" class="thumbnail-one" @click.stop="viewPicture(item.imgUrls, 0)">
+                                <img :src="item.imgUrls[0]" alt="">
+                            </div>
+                        </div>
+                        <div style="overflow: hidden;">
+                            {{item.position}}
+                            <img class="fr" v-if="item.scene != '0' && item.scene" :src="'/static/scene' + item.scene + '.png'" width="20"/>
+                            <img class="fr" v-if="item.weather != '0' && item.weather" :src="'/static/weather' + item.weather + '.png'" width="20"/>
+                            <img class="fr" v-if="item.mood != '0' && item.mood" :src="'/static/mood' + item.mood + '.png'" width="20"/>
                         </div>
                         <div class="handle">{{longTime(item.createDate)}}
-                            <i v-show="item.praise != 1" class="iconfont icon-dianzan1" @click.stop="praise(item.towerContentId, index)"></i>
-                            <i v-show="item.praise == 1" class="iconfont icon-yijin13-zan text-red" @click.stop="no_praise(item.towerContentId, index)"></i>
+                            <i class="iconfont icon-shanchu" @click.stop="deleteContent(item.towerContentId, index)"></i>
+                            <i class="iconfont icon-icon-1" @click.stop="editContent(item.towerContentId)"></i>
                             <i class="iconfont icon-pinglun" @click.stop="toDetail(item.towerContentId, item.contentType, 1)"></i>
-                            <i v-show="item.collection != 1" class="iconfont icon-ego-heart" @click.stop="collection(item.towerContentId, index)"></i>
-                            <i v-show="item.collection == 1" class="iconfont icon-guanzhu text-red" @click.stop="no_collection(item.towerContentId, index)"></i>
                         </div> 
                     </div>
+                    <div v-show="!contentShowList.length" style="text-align: center;">没有找到任何记录！</div>
                 </div>
             </scroller>
         </div>
+        <!--编辑默认分类描述-->
+        <popup v-model="popup0" height="100%"  @on-show="showPopup0">
+            <x-header class="pst">
+                {{dribKindName}}
+                <a slot="overwrite-left" @click="popup0 = false">取消</a>
+                <a slot="right" @click="savePopup0">保存</a>
+            </x-header>
+            <x-textarea :height="140" class="textarea" v-model="dribKindDetail" ref="textarea" placeholder="请输入描述" style="background: #fff;"></x-textarea>
+        </popup>
         <!--分类管理-->
         <popup v-model="show1" height="100%">
             <div class="popup1">
@@ -88,14 +178,65 @@
                 <group gutter='0'>
                     <x-input ref="editInput" placeholder="请输入分类名" v-model="editText"></x-input>
                 </group>
+                <group gutter='20'>
+                    <x-textarea :height="140" class="textarea" v-model="editDesc" ref="textarea" placeholder="请输入描述" style="background: #fff;"></x-textarea>
+                </group>
             </div>
         </popup>
+        <!-- 选择分类 -->
+        <popup v-model="popup4" height="" style="background: #fbf9fe;">
+            <group gutter='0'>
+                <radio :selected-label-style="{color: '#0084FF'}" :options="kinds" v-model="kind" @on-change="modifydribkind"></radio>
+            </group>
+        </popup>
+        <!-- 筛选 -->
+        <div v-show="popup5" class="filter-wrap" @click="popup5 = false">
+            <div class="filter">
+                <p>
+                    <span class="label">日期</span>
+                    <span class="text-base" @click="filter('week', '1')">默认</span>&nbsp;
+                    <span class="text-base" @click="filter('week', '0')">本周</span>&nbsp;
+                    <span class="text-base" @click="filter('week', '-1')">上周</span>&nbsp;
+                    <span class="text-base" @click="filter('week', '-2')">更早</span>
+                </p>
+                <p>
+                    <span class="label">心情</span>
+                    <span class="text-base" @click="filter('mood', '0')">all</span>&nbsp;&nbsp;
+                    <img src="/static/mood1.png" alt="" @click="filter('mood', '1')">
+                    <img src="/static/mood2.png" alt="" @click="filter('mood', '2')">
+                    <img src="/static/mood3.png" alt="" @click="filter('mood', '3')">
+                    <img src="/static/mood4.png" alt="" @click="filter('mood', '4')">
+                    <img src="/static/mood5.png" alt="" @click="filter('mood', '5')">
+                    <img src="/static/mood6.png" alt="" @click="filter('mood', '6')">
+                </p>
+                <p>
+                    <span class="label">天气</span>
+                    <span class="text-base" @click="filter('weather', '0')">all</span>&nbsp;&nbsp;
+                    <img src="/static/weather1.png" alt="" @click="filter('weather', '1')">
+                    <img src="/static/weather2.png" alt="" @click="filter('weather', '2')">
+                    <img src="/static/weather3.png" alt="" @click="filter('weather', '3')">
+                    <img src="/static/weather4.png" alt="" @click="filter('weather', '4')">
+                    <img src="/static/weather5.png" alt="" @click="filter('weather', '5')">
+                    <img src="/static/weather6.png" alt="" @click="filter('weather', '6')">
+                </p>
+                <p>
+                    <span class="label">场景</span>
+                    <span class="text-base" @click="filter('scene', '0')">all</span>&nbsp;&nbsp;
+                    <img src="/static/scene1.png" alt="" @click="filter('scene', '1')">
+                    <img src="/static/scene2.png" alt="" @click="filter('scene', '2')">
+                    <img src="/static/scene3.png" alt="" @click="filter('scene', '3')">
+                    <img src="/static/scene4.png" alt="" @click="filter('scene', '4')">
+                    <img src="/static/scene5.png" alt="" @click="filter('scene', '5')">
+                    <img src="/static/scene6.png" alt="" @click="filter('scene', '6')">
+                </p>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
     import { XHeader, Actionsheet, TransferDom, ButtonTab, ButtonTabItem, Scroller, Popup, Group, XInput } from 'vux'
-    import { Tab, TabItem, Sticky, Divider, XButton, Swiper, SwiperItem } from 'vux'
+    import { Tab, TabItem, Sticky, Divider, XButton, Swiper, SwiperItem, XTextarea, Radio, Icon } from 'vux'
     import { setTimeout } from 'timers';
 
     const pulldownDefaultConfig = {
@@ -134,6 +275,9 @@
             Popup,
             Group,
             XInput,
+            XTextarea,  
+            Radio,
+            Icon,
         },
         data () {
             return {
@@ -141,9 +285,11 @@
                 show1: false,   //  分类管理窗口
                 show2: false,   //  添加分类窗口
                 show3: false,   //  编辑分类窗口
+                popup0: false,  //  编辑默认分类描述
                 startX : 0 ,
                 endX : 0 ,
                 editText: '',
+                editDesc: '',
                 addText: '',
                 index: 0,
 
@@ -153,24 +299,49 @@
                 length: 5,              //  显示数据长度
                 pageNum: 1,             //  当前页
                 dribKindId: '',         //  点滴分类id
+                dribKindName: '',        //  当前分类名称
+                dribKindDetail: '',     //  分类描述
 
                 //  刷新、加载
                 pullupDefaultConfig: pullupDefaultConfig,
                 pulldownDefaultConfig: pulldownDefaultConfig,
                 isEmpty: false,         //  没有数据
+
+            //  修改内容分类
+                popup4: false,          
+                kinds: [],              //  分类列表
+                kind: '',               //  选择分类
+                towerContentId: '',     //  当前编辑的内容id
+            //  筛选
+                popup5: false,
+                filterFiled: '',
+                filterType: '',
             }
         },
         mounted(){
             this.$nextTick(() => {
                 this.$refs.scrollerBottom.reset({top: 0})
             })
+            this.$vux.loading.show()
+            this.loadMore()
         },
         activated(){
-            this.loadMore()
             this.getdribkind()
         },
+        deactivated(){
+            this.popup5 = false
+        },
         methods: {
-            
+            //  筛选
+            filter(filterFiled, filterType){
+                this.filterFiled = filterFiled
+                this.filterType = filterType
+                this.dribKindId = ''
+                this.dribKindName = ''
+                this.dribKindDetail = ''
+                this.refresh()
+            },
+
             //  获取点滴分类
             getdribkind(){
                 let params = new FormData()
@@ -180,9 +351,32 @@
             },
 
             //  获取分类内容
-            getDribByKind(dribKindId){
+            getDribByKind(dribKindId, dribKindName, dribKindDetail){
+                this.dribKindName = dribKindName
+                this.dribKindDetail = dribKindDetail
                 this.dribKindId = dribKindId
+                this.filterFiled = ''
+                this.filterType = ''
                 this.refresh()
+            },
+
+            //  打开点滴默认分类编辑
+            showPopup0(){
+                setTimeout(() => {
+                    this.$refs.textarea.focus()
+                },200)
+            },
+
+            //  保存点滴默认分类
+            savePopup0(){
+                let params = new FormData();
+                params.append("dribKindId", this.dribKindId)
+                params.append("dribKindName", this.dribKindName)
+                params.append("dribKindDetail", this.dribKindDetail)
+                this.$post("editdribkind", params, (data) => {
+                    this.popup0 = false
+                    this.getdribkind()
+                })
             },
 
             fetchData(cb) {
@@ -204,8 +398,11 @@
                     let params = new FormData()
                     params.append("pageNum", 1)
                     params.append("dribKindId", this.dribKindId)
+                    params.append(this.filterFiled, this.filterType)
                     this.$vux.loading.show()
                     this.$post("getdrib", params, (data) => {
+                        // this.dribKindName = dribKindName
+                        // this.dribKindDetail = dribKindDetail
                         this.$refs.scrollerBottom.reset({top: 0})
                         this.contentShowList = [].concat(data.contentList)
                         if(data.contentList.length == 5){
@@ -222,6 +419,8 @@
                 this.fetchData(() => {
                     let params = new FormData()
                     params.append("pageNum", this.pageNum)
+                    params.append("dribKindId", this.dribKindId)
+                    params.append(this.filterFiled, this.filterType)
                     this.$vux.loading.show()
                     this.$post("getdrib", params, (data) => {
                         data.contentList.map(item => {
@@ -243,51 +442,45 @@
 
             
 
-            //  收藏
-            collection(id, index){
-                let params = new FormData()
-                params.append('towerContentId', id)
-                this.$post("collection", params, (data) => {
-                    this.contentShowList[index].collection = '1'
+            //  删除内容
+            deleteContent(id, index){
+                this.$vux.confirm.show({
+                    title: '塔兮',
+                    content: '确定要删除吗?',
+                    onCancel: () => {},
+                    onConfirm: () => {
+                        let params = new FormData()
+                        params.append('towerContentId', id)
+                        this.$post("deletecontent", params, (data) => {
+                            this.contentShowList.splice(index, 1)
+                            this.toastSuccess("删除成功")
+                        })
+                    }
                 })
             },
-            //  取消收藏
-            no_collection(id, index){
-                let params = new FormData()
-                console.log(id)
-                params.append('towerContentId', id)
-                this.$post("no_collection", params, (data) => {
-                    this.contentShowList[index].collection = '0'
-                })
+        /**********************************修改内容的分类************************************ */
+            editContent(towerContentId){
+                this.towerContentId = towerContentId
+                this.kinds = []
+                this.dribKindList.forEach(item => {
+                    this.kinds.push({
+                        key: item.dribKindId,
+                        value: item.dribKindName
+                    })
+                });
+                this.popup4 = true
             },
-            //  点赞
-            praise(id, index){
+            modifydribkind(value){
                 let params = new FormData()
-                params.append('towerContentId', id)
-                this.$post("praise", params, (data) => {
-                    this.contentShowList[index].praise = '1'
-                })
-            },
-            //  取消点赞
-            no_praise(id, index){
-                let params = new FormData()
-                params.append('towerContentId', id)
-                this.$post("no_praise", params, (data) => {
-                    this.contentShowList[index].praise = '0'
+                params.append("towerContentId", this.towerContentId)
+                params.append("dribKindId", value)
+                this.$post("modifydribkind", params, (data) => {
+                    this.toastSuccess("修改成功")
+                    this.popup4 = false
                 })
             },
 
-
-
-
-
-
-
-
-
-
-
-
+        /*********************************分类管理****************************** */
             skip(){
                 if( this.checkSlide() ){
                     this.restSlide();
@@ -360,11 +553,13 @@
                     that.$refs.addInput.focus()
                 },200)
             },
+        /************************************新增修改编辑分类********************************* */
             //编辑
             editItem(index){
                 this.restSlide();
                 this.show3 = true
                 this.editText = this.dribKindList[index].dribKindName
+                this.editDesc = this.dribKindList[index].dribKindDetail
                 this.index = index
             },
             //删除
@@ -409,9 +604,12 @@
                 let params = new FormData()
                 params.append("dribKindId", this.dribKindList[this.index].dribKindId)
                 params.append("dribKindName", this.editText)
+                params.append("dribKindDetail", this.editDesc)
                 this.$post('editdribkind', params, (data) => {
                     this.show3 = false
                     this.dribKindList[this.index].dribKindName = this.editText
+                    this.dribKindList[this.index].dribKindDetail = this.editDesc
+                    this.$vux.toastSuccess("修改成功")
                 })
             },
             
@@ -452,7 +650,6 @@
             padding: 10px 0;
             border-top: 1px solid #ddd;
             border-bottom: 1px solid #ddd;
-            margin-bottom: 10px;
             .ability-item{
                 float: left;
                 width: 80px;
@@ -477,6 +674,12 @@
                     font-weight: bold;
                 }
             }
+        }
+        .desc-info{
+            background: #fff;   
+            padding: 10px;
+            line-height: 20px;
+            color: #ccc;
         }
         .hot-card{
             padding: 10px 10px 3px;
@@ -592,6 +795,31 @@
     }
     .weui-cell{
         font-size: 14px;
+    }
+    .filter-wrap{
+        position: absolute;
+        top: 0px;
+        left: 0;
+        z-index: 10;
+        height: 100%;
+        width: 100%;
+        .filter{
+            background: #fff;
+            margin-top: 46px;
+            padding-bottom: 20px;
+            p{
+                padding: 15px 15px 0;
+            }
+            .label{
+                margin-right: 20px;
+            }
+            img{
+                width: 30px;
+                height: 30px;
+                vertical-align: middle;
+                margin: 0 3px;
+            }
+        }
     }
 </style>
 

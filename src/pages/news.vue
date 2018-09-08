@@ -15,12 +15,12 @@
                 </swiper-item>
                 <swiper-item>
                     <div class="comment-info">
-                        <img src="../assets/avatar.jpg" alt="">
+                        <img src="" alt="">
                         <p><span class="text-333">宋祖儿</span><span class="fr font12">2018-08-08 08:08</span></p>
                         <p><span class="font12">宋祖儿关注你了,相互关注成为好友吧</span></p>
                     </div>
                     <div class="comment-info">
-                        <img src="../assets/avatar.jpg" alt="">
+                        <img src="" alt="">
                         <p><span class="text-333">付熙评论了你的点滴</span><span class="fr font12">2018-08-08 08:08</span></p>
                         <p><span class="font12">我觉得还可以</span></p>
                     </div>

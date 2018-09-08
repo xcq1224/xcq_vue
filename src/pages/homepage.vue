@@ -15,11 +15,9 @@
                 <div class="attention-left">
                     <p>
                         <span class="num">{{userInfo.followNum}}</span>
-                        <!-- <img src="../assets/avatar.jpg" alt=""><img src="../assets/avatar.jpg" alt=""><img src="../assets/avatar.jpg" alt=""><img src="../assets/avatar.jpg" alt=""><img src="../assets/avatar.jpg" alt=""> -->
                     </p>
                     <p>
                         <span>关注</span>
-                        <!-- <img src="../assets/avatar.jpg" alt=""><img src="../assets/avatar.jpg" alt=""><img src="../assets/avatar.jpg" alt=""><img src="../assets/avatar.jpg" alt=""><img src="../assets/avatar.jpg" alt=""> -->
                     </p>
                 </div>
                 <div class="attention-right">
@@ -37,15 +35,26 @@
             </scroller>
             <div class="hot-card" @click="toDetail(item.towerContentId, item.contentType)" v-for="(item, index) in contentList" :key="index">
                 <div v-show="item.title" class="card-title text-ellipsis">{{item.title}}</div>
-                <div v-show="item.content" class="card-desc" :class="item.contentType == '0'? 'text-ellipsis12':'text-ellipsis2'">{{item.content}}</div>
+                <div v-show="item.content && item.contentType != 6" class="card-desc" :class="item.contentType == '0'? 'text-ellipsis12':'text-ellipsis2'">{{item.content}}</div>
                 <div v-if="item.contentType == 2 || item.contentType == 3" class="video-box">
-                    <img :src="item.videoImg">
+                    <img class="video-img" :src="item.videoImg">
                     <span class="play-btn iconfont icon-bofang" @click.stop="openVideo(item.videoUrl, item.videoImg)"></span>
                 </div>
-                <div v-if="item.contentType == 1" class="picture-box">
-                    <img :src="item.imgUrl_1" alt="">
+                <!-- 图片 -->
+                <div v-if="item.imgUrls.length" class="thumbnail-box">
+                    <div v-if="item.imgUrls.length > 1" class="thumbnail" :style="{backgroundImage: 'url(' + imgItem + ')' }" 
+                        v-for="(imgItem, imgIndex) in item.imgUrls" :key="imgIndex" @click.stop="viewPicture(item.imgUrls, imgIndex)"></div>
+                    <div v-if="item.imgUrls.length == 1" class="thumbnail-one" @click.stop="viewPicture(item.imgUrls, 0)">
+                        <img :src="item.imgUrls[0]" alt="">
+                    </div>
                 </div>
-                <div class="handle">{{item.contentKind}}
+                <div style="overflow: hidden;">
+                    {{item.position}}
+                    <img class="fr" v-if="item.scene != '0' && item.scene" :src="'/static/scene' + item.scene + '.png'" width="20"/>
+                    <img class="fr" v-if="item.weather != '0' && item.weather" :src="'/static/weather' + item.weather + '.png'" width="20"/>
+                    <img class="fr" v-if="item.mood != '0' && item.mood" :src="'/static/mood' + item.mood + '.png'" width="20"/>
+                </div>
+                <div class="handle">{{longTime(item.createDate)}}
                     <i v-show="item.praise != 1" class="iconfont icon-dianzan1" @click.stop="praise(item.towerContentId, index)"></i>
                     <i v-show="item.praise == 1" class="iconfont icon-yijin13-zan text-red" @click.stop="no_praise(item.towerContentId, index)"></i>
                     <i class="iconfont icon-pinglun" @click.stop="toDetail(item.towerContentId, item.contentType, 1)"></i>
@@ -114,7 +123,7 @@ import { format } from 'url';
             follow(id){
                 if(!this.$store.state.towerUserId){
                     this.toastSuccess("请先登录")
-                    this.$router.push("./login")
+                    this.login()
                     return
                 }
                 let params = new FormData()
@@ -146,7 +155,7 @@ import { format } from 'url';
             collection(id, index){
                 if(!this.$store.state.towerUserId){
                     this.toastSuccess("请先登录")
-                    this.$router.push("./login")
+                    this.login()
                     return
                 }
                 let params = new FormData()
@@ -155,7 +164,7 @@ import { format } from 'url';
                     this.contentList[index].collection = '1'
                 })
             },
-            //  取消收藏
+            //  取消收藏    
             no_collection(id, index){
                 let params = new FormData()
                 console.log(id)
@@ -168,7 +177,7 @@ import { format } from 'url';
             praise(id, index){
                 if(!this.$store.state.towerUserId){
                     this.toastSuccess("请先登录")
-                    this.$router.push("./login")
+                    this.login()
                     return
                 }
                 let params = new FormData()

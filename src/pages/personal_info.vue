@@ -3,7 +3,7 @@
         <x-header class="pst" :left-options="{backText: ''}">个人资料<a slot="right" @click="save">保存</a></x-header>
         <div class="main">
             <group gutter='0' label-width="100px">
-                <input class="upload-input" v-show="false" @click="inputClick" ref="upload" type="file" @change="upload" accept="image/*">
+                <input class="upload-input" v-show="false" ref="upload" type="file" @change="upload" accept="image/*">
                 <cell class="cell" is-link @click.native="uploadClick">
                     <span slot="title">头像</span>
                     <div slot>
@@ -138,9 +138,7 @@
             //  上传头像
             uploadClick(){
                 this.$refs.upload.click()
-            },
-            inputClick(){
-                window.android.storage()
+                this.$refs.upload.click()
             },
             upload(e){
                 this.file = e.target.files[0];

@@ -168,6 +168,40 @@ input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill{
     }
 }
 
+//  图片显示
+.thumbnail{
+    width: 80px;
+    height: 80px;
+    border: 1px solid #eee;
+    float: left;
+    margin-right: 10px;  
+    margin-bottom: 10px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    
+    img{
+        position: relative;
+        top: 40px;
+        left: 40px;
+        width: 80px;
+        min-width: 80px;
+        min-height: 80px;
+        transform: translate3d(-50%, -50%, 0);
+    }
+}
+//  图片显示
+.thumbnail-box{
+    overflow: hidden;
+    margin-left: 40px;
+    .thumbnail-one{
+        img{
+            max-width: 170px;
+            max-height: 170px;
+        }
+    }
+}
+
 
 .video-box, .picture-box{
     height: 200px;

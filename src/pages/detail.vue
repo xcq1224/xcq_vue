@@ -34,27 +34,6 @@
                             <p>如有疑问，可点击下方咨询。</p>
                         </div>
                     </div>
-                    <!-- <div class="recommend" v-if="false">
-                        <div class="more">相关推荐</div>
-                        <div class="chosen-card">
-                            <img src="../assets/avatar.jpg" width="118" height="70">
-                            <p class="title">锻炼逻辑思维能力，开启机器人之旅开启机器人之旅开启器人之旅开启器人之旅开启器人之旅开启</p>
-                            <p>云上塔兮 Abby</p>
-                            <p><span class="num">1092</span>人在学<span class="sprice">￥35.00</span></p>
-                        </div>
-                        <div class="chosen-card">
-                            <img src="../assets/avatar.jpg" width="118" height="70">
-                            <p class="title">锻炼逻辑思维能力，开启机器人之旅开启机器人之旅开启机器人之旅</p>
-                            <p>云上塔兮 Abby</p>
-                            <p><span class="num">1092</span>人在学<span class="sprice">￥35.00</span></p>
-                        </div>
-                        <div class="chosen-card">
-                            <img src="../assets/avatar.jpg" width="118" height="70">
-                            <p class="title">锻炼逻辑思维能力，开启机器人之旅开启机器人之旅开启机器人之旅</p>
-                            <p>云上塔兮 Abby</p>
-                            <p><span class="num">1092</span>人在学<span class="sprice">￥35.00</span></p>
-                        </div>
-                    </div> -->
                 </swiper-item>
                 <swiper-item class="item-comment">
                     <div class="comment-card" v-for="(item, index) in commentList" :key="index">
@@ -157,7 +136,7 @@
             toSend(){
                 if(!this.$store.state.towerUserId){
                     this.toastSuccess("请先登录")
-                    this.$router.push("./login")
+                    this.login()
                     return
                 }
                 this.showPop=true
@@ -187,7 +166,7 @@
             follow(id){
                 if(!this.$store.state.towerUserId){
                     this.toastSuccess("请先登录")
-                    this.$router.push("./login")
+                    this.login()
                     return
                 }
                 let params = new FormData()
@@ -210,7 +189,7 @@
             collection(id){
                 if(!this.$store.state.towerUserId){
                     this.toastSuccess("请先登录")
-                    this.$router.push("./login")
+                    this.login()
                     return
                 }
                 let params = new FormData()
@@ -231,7 +210,7 @@
             praise(id){
                 if(!this.$store.state.towerUserId){
                     this.toastSuccess("请先登录")
-                    this.$router.push("./login")
+                    this.login()
                     return
                 }
                 let params = new FormData()

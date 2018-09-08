@@ -4,7 +4,7 @@
         <div class="main">
             <div class="article-box">
                 <div class="user-info">
-                    <img src="../assets/avatar.jpg" width="40" height='40' alt="">曾庆全<a class="active">+关注</a>
+                    <img src="" width="40" height='40' alt="">曾庆全<a class="active">+关注</a>
                 </div>
                 <div class="title">
                     资深HR解析--我们到底需要什么人？
@@ -12,7 +12,7 @@
                 <p class="datetime">就业&nbsp;&nbsp;&nbsp;&nbsp;2018-08-08 08:08</p>
                 <div style="padding: 10px;">
                     <div class="picture-box">
-                        <img src="../assets/picture3.jpg" alt="">
+                        <img src="" alt="">
                     </div>
                 </div>
                 <div class="article">
@@ -30,7 +30,7 @@
                 <div class="tab"><span>评论</span></div>
                 <div class="comment-card">
                     <div class="title">
-                        <img src="../assets/avatar.jpg" width="28" height='28' alt="">曾庆全
+                        <img src="" width="28" height='28' alt="">曾庆全
                         <span>2018-05-04 08:08</span>
                     </div>
                     <p>挺好的挺好的挺好的挺好的挺好的挺好的挺好的挺好的挺好的挺好的挺好的挺好的挺好的挺好的挺好的挺好的挺好的
@@ -39,7 +39,7 @@
                 </div>
                 <div class="comment-card">
                     <div class="title">
-                        <img src="../assets/avatar.jpg" width="28" height='28' alt="">曾庆全
+                        <img src="" width="28" height='28' alt="">曾庆全
                         <span>2018-05-04 08:08</span>
                     </div>
                     <p>挺好的挺好的挺好的挺好的挺好的挺好的挺好的挺好的挺好的挺好的挺好的挺好的挺好的挺好的挺好的挺好的挺好的

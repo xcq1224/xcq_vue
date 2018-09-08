@@ -36,17 +36,16 @@
                     <div @click="uploadClick('uploadVideo')">
                         <span style="background: #fbce77;"><i class="iconfont icon-paizhao"></i></span>
                         <p>视频</p>
-                        <input class="open-camera" ref="uploadVideo" @click="openShooting" @change="uploadVideo" v-show="false" type="file" accept="" capture="microphone">
+                        <input class="open-camera" ref="uploadVideo" @change="uploadVideo" v-show="false" type="file" accept="video/*" capture="camera">
                     </div>
                     <div @click="uploadClick('uploadPicture')">
                         <span style="background: #86df79;"><i class="iconfont icon-xiangce"></i></span>
                         <p>拍照</p>
-                        <input ref="uploadPicture" @change="uploadPicture" v-show="false" @click="openPhoto" type="file" accept="image/*">  
+                        <input ref="uploadPicture" @change="uploadPicture" v-show="false" type="file" accept="image/*" capture="camera">  
                     </div>
                     <div @click="uploadClick('uploadAlbum')">
                         <span style="background: #86df79;"><i class="iconfont icon-xiangce"></i></span>
                         <p>相册</p>
-                        <!-- <input ref="openAlbum1" @change="openAlbum1" v-show="false" @click="openAlbum" type="file" accept="image/*">   -->
                     </div>
                     <div @click="publish4(4)">
                         <span style="background: #b5e1fe;"><i class="iconfont icon-jinengtechang--"></i></span>
@@ -56,11 +55,11 @@
                         <span style="background: #0084ff;"><i class="iconfont icon-xiangmuxuqiu"></i></span>
                         <p>需求</p>
                     </div>
-                    <div @click="publishCourse(0)">
+                    <!-- <div @click="publishCourse(0)">
                         <span style="background: #cc66cc;"><i class="iconfont icon-kecheng-"></i></span>
                         <p>小课</p>
-                    </div>
-                    <div @click="publishCourse(1)">
+                    </div> -->
+                    <div @click="goTo('./publish_article')">
                         <span style="background: #cc66cc;"><i class="iconfont icon-kecheng-"></i></span>
                         <p>文章</p>
                     </div>
@@ -72,14 +71,20 @@
             </div>
         </popup>
         <!--发布文字、图片-->
-        <popup v-model="show1" height="100%" @on-show="openShow1" @on-hide="closeShow1">
+        <popup v-model="show1" height="100%" @on-show="openShow1" @on-hide="closeShow1" @click.native="tagIndex = 0">
             <div class="main">
-                <div class="header"><span @click="show1=false">取消</span><span class="fr text-base" @click="publishText">发布</span></div>
-                <x-textarea :height="140" class="textarea" :max="200" v-model="textarea" ref="textarea" placeholder="分享这一刻的想法..."></x-textarea>
-                <div v-show="files.length" class="img-box">
-                    <div class="img-item" v-for="(item, index) in files" :key="index">
-                        <img :src="getUrl(item)" alt="">
-                        <span class="del" @click="delImg(index)">x</span>
+                <div class="header">
+                    <span @click="show1=false">取消</span>
+                    <i class="iconfont upload fr text-base icon-icon-" style="font-weight: bold;margin-left: 10px; font-size: 20px;" @click="show2=true"></i>
+                    <span class="fr text-base" @click="publishText">发布</span>
+                </div>
+                <x-textarea :height="140" class="textarea" v-model="textarea" ref="textarea" placeholder="分享这一刻的想法..."></x-textarea>
+                <div v-show="!videoFile" class="img-box">
+                    <div class="img-thumbnail thumbnail" :style="{backgroundImage: 'url(' + imgItem + ')' }" v-for="(imgItem, imgIndex) in files" :key="imgIndex" @click.stop="viewPicture(files, imgIndex)">
+                        <span class="del" @click.stop="delImg(imgIndex)">x</span>
+                    </div>
+                    <div class="img-item" v-show="files.length != 9" style="text-align: center;" @click="uploadClick('uploadAlbum')">
+                        <i class="iconfont icon-tainjia" style="font-size: 60px; color: #ccc; line-height: 100px;"></i>
                     </div>
                 </div>
                 <div v-show="videoFile" class="img-box">
@@ -92,19 +97,47 @@
             </div>
             <div class="footer">
                 <div>
-                    <span><i class="iconfont icon-dingwei"></i>你在哪里</span>
-                    <popover placement="bottom" class="fr" :gutter='0'>
+                    <div class="tag-content">
+                        <div slot="content" class="tagBox" v-show="tagIndex == 1">
+                            <img src="/static/mood1.png" alt="" @click="mood = '1'">
+                            <img src="/static/mood2.png" alt="" @click="mood = '2'">
+                            <img src="/static/mood3.png" alt="" @click="mood = '3'">
+                            <img src="/static/mood4.png" alt="" @click="mood = '4'">
+                            <img src="/static/mood5.png" alt="" @click="mood = '5'">
+                            <img src="/static/mood6.png" alt="" @click="mood = '6'">
+                        </div>
+                        <div slot="content" class="tagBox" v-show="tagIndex == 2">
+                            <img src="/static/weather1.png" alt="" @click="weather = '1'">
+                            <img src="/static/weather2.png" alt="" @click="weather = '2'">
+                            <img src="/static/weather3.png" alt="" @click="weather = '3'">
+                            <img src="/static/weather4.png" alt="" @click="weather = '4'">
+                            <img src="/static/weather5.png" alt="" @click="weather = '5'">
+                            <img src="/static/weather6.png" alt="" @click="weather = '6'">
+                        </div>
+                        <div slot="content" class="tagBox" v-show="tagIndex == 3">
+                            <img src="/static/scene1.png" alt="" @click="scene = '1'">
+                            <img src="/static/scene2.png" alt="" @click="scene = '2'">
+                            <img src="/static/scene3.png" alt="" @click="scene = '3'">
+                            <img src="/static/scene4.png" alt="" @click="scene = '4'">
+                            <img src="/static/scene5.png" alt="" @click="scene = '5'">
+                            <img src="/static/scene6.png" alt="" @click="scene = '6'">
+                        </div>
+                        <a @click.stop="tagIndex = 1"><span v-if="mood == '0'"> 心情 </span><img v-if="mood != '0'" :src="'/static/mood' + mood + '.png'" alt=""></a>|
+                        <a @click.stop="tagIndex = 2"><span v-if="weather == '0'"> 天气 </span><img v-if="weather != '0'" :src="'/static/weather' + weather + '.png'" alt=""></a>|
+                        <a @click.stop="tagIndex = 3"><span v-if="scene == '0'"> 场景 </span><img v-if="scene != '0'" :src="'/static/scene' + scene + '.png'" alt=""></a>
+                    </div>
+                </div>
+                <div>
+                    <span @click="geolocation" v-show="!position" class="text-base"><i class="iconfont icon-dingwei"></i>你在哪里</span>
+                    <span v-show="position"><i class="iconfont icon-dingwei"></i>{{position}}</span>
+                    <popover placement="top" class="fr" :gutter='0'>
                         <div slot="content" class="search-tab-items">
                             <p v-show="index != searchIndex" :class="index == searchIndex?'active': ''" v-for="(item, index) in searchTabs" :key="index" @click="searchChoose(index)">{{searchTabs[index]}}</p>
                         </div>
                         <span class="tab fr"><i class="iconfont icon-diqiu"></i>{{searchTabs[searchIndex]}}</span>
                     </popover>
                 </div>
-                <p>
-                    <!-- <i v-show="!videoFile" class="iconfont upload icon-xiangce" @click="uploadClick('uploadAlbum')"></i> -->
-                    <input ref="uploadAlbum" @change="uploadPicture" v-show="false" @click="openAlbum" type="file" accept="image/*" multiple="multiple">
-                    <i class="iconfont upload icon-fenlei" @click="show2=true"></i>
-                </p>
+                <input ref="uploadAlbum" @change="uploadPicture" v-show="false" type="file" accept="image/*" multiple="multiple">
             </div> 
         </popup>
         <popup v-model="show2" height="100%" @on-show="openShow2">
@@ -145,11 +178,17 @@
                     <!-- <datetime class="datetime" placeholder="请选择时间" v-model="datetime" title="截止时间" format="YYYY-MM-DD HH:mm"></datetime> -->
                 </group>
                 <group gutter='0' title="图片">
-                    <div class="img-box" @click="uploadClick('upload5')">
-                        <div class="img-item">
-                            <img :src="getUrl(files[0])" alt="">
+                    <div class="img-box">
+                        <!-- <div class="img-item">
+                            <img :src="files[0]" alt="">
                             <input class="upload-input" v-show="false" ref="upload5" type="file" @change="upload5" accept="image/*">
                             <i v-show="!files.length" class="iconfont icon-web-icon-1 upload" style="position: absolute;font-size: 40px;top: 10px;left: 18px;color: #ccc;"></i>
+                        </div> -->
+                        <div class="img-thumbnail thumbnail" :style="{backgroundImage: 'url(' + imgItem + ')' }" v-for="(imgItem, imgIndex) in files" :key="imgIndex" @click.stop="viewPicture(files, imgIndex)">
+                            <span class="del" @click.stop="delImg(imgIndex)">x</span>
+                        </div>
+                        <div class="img-item" v-show="files.length != 9" style="text-align: center;" @click="uploadClick('uploadAlbum')">
+                            <i class="iconfont icon-tainjia" style="font-size: 60px; color: #ccc; line-height: 100px;"></i>
                         </div>
                     </div>
                 </group>
@@ -206,9 +245,29 @@ export default {
                 className: '',        //  分类名
                 addText: '',        //  新增分类文字
                 contentType: '',    //  上传类型
+
+                //  定位
+                options : {timeout: 8000},          //  定位超时
+                position: '',                        //  地址
+                tagIndex: 0,                        //  选择标签分类
+                mood: '0',                            //  心情
+                weather: '0',                         //  天气
+                scene:'0',                           //  场景
+                longitude: '',                      //  经度
+                latitude: '',                       //  维度
+
             }
     },
     methods: {
+        //  文件流转化为url
+        file2path(files){
+            let urlList = []
+            files.map(item => {
+                urlList.push(this.getUrl(item))
+            })
+            return urlList
+        },
+        //发布小课、文章
         publishCourse(index){
             this.$vux.confirm.show({
                 title: '塔兮',
@@ -244,17 +303,16 @@ export default {
         publish0(){
             if(!this.$store.state.towerUserId){
                 this.toastSuccess("请先登录")
-                this.$router.push("./login")
+                this.login()
             }else{
                 this.show1 = true
-                this.contentType = 0
             }
         },
         //  上传技能
         publish4(index){
             if(!this.$store.state.towerUserId){
                 this.toastSuccess("请先登录")
-                this.$router.push("./login")
+                this.login()
             }else{
                 this.show4 = true
                 this.contentType = index
@@ -269,25 +327,11 @@ export default {
         uploadClick(val){
             if(!this.$store.state.towerUserId){
                 this.toastSuccess("请先登录")
-                this.$router.push("./login")
+                this.login()
             }else{
                 this.$refs[val].click()
+                this.$refs[val].click()
             }
-        },
-        //  打开拍摄
-        openShooting(){
-            this.contentType = 2
-            window.android.video()
-        },
-        //  打开拍照
-        openPhoto(){
-            this.contentType = 1
-            window.android.camera()
-        },
-        //  打开相册
-        openAlbum(){
-            this.contentType = 1
-            window.android.storage()
         },
         //  播放视频
         playVideo(){
@@ -295,7 +339,6 @@ export default {
             this.openVideo(videoUrl, this.videoImg)
         },
         
-
 
         // 上传拍摄
         uploadVideo(e){
@@ -316,26 +359,29 @@ export default {
         },
         // 上传相册（把图片添加到files列表里面，打开发布相册弹框并清除input值）
         uploadPicture(e){
-            let flag = false
+            var that = this;
             const files = e.target.files;
+            let n = this.files.length
+            let flag = false
             for(let i=0; i<files.length; i++){
-                this.files.push(files[i])
-                if(this.files.length>3){
-                    this.files.pop()
+                if(i>= 9-n){
                     flag = true
                     break
                 }
+                canvasDataURL(this.getUrl(files[i]), i, {}, (baseUrl, m) => {
+                    that.files.splice(m + n, 0, baseUrl)
+                })
+            }
+            if(flag){
+                this.$vux.alert.show({
+                    content: '最多上传9张图片！',
+                })
             }
             e.target.value = ''
             if(!this.show4){
                 this.show1 = true
             }
             this.$refs.uploadPicture.value = ''
-            if(flag){
-                this.$vux.alert.show({
-                    content: '最多上传3张图片！',
-                })
-            }
         },
         //  删除图片
         delImg(index){
@@ -348,6 +394,13 @@ export default {
         //  打开发布文字弹框（文本框聚焦）
         openShow1(){
             this.showMore = false
+            this.position = ''
+            this.tagIndex = 0
+            this.mood = '0'
+            this.weather ='0'
+            this.scene = '0'
+            this.longitude = ''
+            this.latitude = ''
             let that = this
             setTimeout(function(){
                 that.$refs.textarea.focus()
@@ -364,18 +417,27 @@ export default {
         publishText(){
             if(this.textarea || this.files.length || this.videoFile){
                 let params = new FormData()
+                let contentType = 0
                 this.files.map((file, index)=>{
-                    params.append('img_'+(index+1), file)
+                    params.append('img_'+(index+1) + '_base64', file)
+                    contentType = 1
                 })
                 
                 if(this.videoFile){
                     params.append('video', this.videoFile)
                     params.append('video_img', this.videoPicture)
+                    contentType = 2
                 }
                 params.append('content', this.textarea)
                 params.append('contentStatus ', this.searchIndex)
                 params.append('dribKindName', this.className)
-                params.append('contentType', this.contentType)
+                params.append('contentType', contentType)
+                params.append('mood', this.mood)
+                params.append('weather', this.weather)
+                params.append('scene', this.scene)
+                params.append('position', this.position)
+                params.append('longitude', this.longitude)
+                params.append('latitude', this.latitude)
                 this.$vux.loading.show({
                     text: '发布中...'
                 })
@@ -391,6 +453,7 @@ export default {
         openShow2(){
             let params = new FormData()
             this.$post("getdribkind", params, (data) => {
+                this.classList = []
                 data.dribKindList.map(item => {
                     this.classList.push(item.dribKindName)
                 })
@@ -425,8 +488,7 @@ export default {
                 })
             }
         },
-
-
+    /****************************技能************************* */
         //  关闭发布技能弹框
         closeShow4(){
             this.textarea = ''
@@ -460,9 +522,9 @@ export default {
             }
             params.append("textarea", this.textarea)
             params.append("contentType", this.contentType)
-            if(this.files.length){
-                params.append("img_1", this.files[0])
-            }
+            this.files.map((file, index)=>{
+                params.append('img_'+(index+1) + '_base64', file)
+            })
             this.$vux.loading.show({
                 text: '发布中...'
             })
@@ -471,7 +533,94 @@ export default {
                 this.toastSuccess("上传成功")
             })
         },
+    /***************************************获取定位*********************************** */
+            geolocation(){
+                this.$vux.loading.show({
+                    text: '定位中...'
+                })
+                var geolocation = new qq.maps.Geolocation("OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77", "myapp")
+                geolocation.getLocation(this.showPosition, this.showErr, this.options)
+            },
+            showPosition(position) {
+                this.longitude = position.lng
+                this.latitude = position.lat
+                var latlon = position.lat + "," + position.lng;
+                //  google地图定位
+                var url = 'http://maps.google.cn/maps/api/geocode/json?latlng='+latlon+'&language=CN';
+                this.$axios({
+                    method:"GET",
+                    url:url,
+                    withCredentials: false,
+                }).then(json => {
+                    this.$vux.loading.hide()
+                    if(json.data.status=='OK'){
+                        this.position = json.data.results[0].formatted_address;
+                    }else{
+                        this.toastFail("定位失败")
+                    }
+                }).catch(res=>{
+                        this.$vux.loading.hide()
+                        this.toastFail('网络异常，请稍后再试', '200px')
+                    }
+                )
+            
+                //  百度地图定位
+                // var url = "http://api.map.baidu.com/geocoder/v2/?ak=C93b5178d7a8ebdb830b9b557abce78b&callback=renderReverse&location="+latlon+"&output=json&pois=0";
+                // this.$axios({
+                //     method:"GET",
+                //     dataType: "jsonp", 
+                //     url:url,
+                //     withCredentials: false,
+                // }).then(json => {
+                //     this.$vux.loading.hide()
+                //     if(json.status == 0){
+                //         this.position = json.result.formatted_address;
+                //     }else{
+                //         this.toastFail("定位失败")
+                //     }
+                // }).catch(res=>{
+                //         this.$vux.loading.hide()
+                //         this.toastFail('网络异常，请稍后再试', '200px')
+                //     }
+                // )
+            },
+            showErr(){
+                this.toastFail("定位失败")
+            },
     }  
+}
+function canvasDataURL(path, i, obj, callback){
+    var img = new Image();
+    img.src = path;
+    img.onload = function(){
+        var that = this;
+        // 默认按比例压缩
+        var w = that.width,
+            h = that.height,
+            scale = w / h;
+        w = obj.width || w;
+        h = obj.height || (w / scale);
+        var quality = 0.1; 
+        //生成canvas
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+        // 创建属性节点
+        var anw = document.createAttribute("width");
+        anw.nodeValue = w;
+        var anh = document.createAttribute("height");
+        anh.nodeValue = h;
+        canvas.setAttributeNode(anw);
+        canvas.setAttributeNode(anh);
+        ctx.drawImage(that, 0, 0, w, h);
+        // 图像质量
+        if(obj.quality && obj.quality <= 1 && obj.quality > 0){
+            quality = obj.quality;
+        }
+        // quality值越小，所绘制出的图像越模糊
+        var base64 = canvas.toDataURL('image/jpeg', quality);
+        // 回调函数返回base64的值
+        callback(base64, i);
+    }
 }
 </script>
 <style lang="less" scoped>
@@ -562,8 +711,24 @@ export default {
             }
         }
     }
-
-
+    .tag-content{
+        position: relative;
+        .tagBox{
+            position: absolute;
+            top: -40px;
+            img{
+                width: 40px;
+                height: 40px;
+            }
+        }
+        a{
+            img{
+                width: 30px;
+                height: 30px;
+                vertical-align: middle;
+            }
+        }
+    }
     .main{
         background: #fff;
         .header{
@@ -596,17 +761,17 @@ export default {
         }
         .img-box{
             overflow: hidden;
-            padding: 10px;
+            padding: 10px 20px;
             .img-item{
-                width: 80px;
-                height: 80px;
+                width: 100px;
+                height: 100px;
                 border: 1px solid #ddd;
                 background: #f7f7f7;
                 position: relative;
                 float: left;
                 margin-right: 8px;
                 margin-bottom: 10px;
-                &:nth-of-type(4n){
+                &:nth-of-type(3n){
                     margin-right: 0;
                 }
                 img{
@@ -642,6 +807,30 @@ export default {
                     font-size: 20px;
                     line-height: 30px;
                 }
+            }
+            .img-thumbnail{
+                width: 100px;
+                height: 100px;
+                border: 1px solid #ddd;
+                position: relative;
+                float: left;
+                margin-right: 8px;
+                margin-bottom: 10px;
+                &:nth-of-type(3n){
+                    margin-right: 0;
+                }
+                .del{
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    width: 20px;
+                    height: 20px;
+                    text-align: center;
+                    line-height: 15px;
+                    border-radius: 50%;
+                    background: #b8bdae;
+                    color: #69833a;
+                }   
             }
         }
         .img-list{

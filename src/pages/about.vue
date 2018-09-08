@@ -6,9 +6,7 @@
                 <img src="../assets/logo.png" alt="">
             </div>
             <group gutter='0'>
-                <cell class="cell" :title="'当前版本：v' + version.versionName">
-                    <div slot="" @click="download">{{isNewest ? "已是最新版本" : "下载最新版本"}}</div>
-                </cell>
+                <cell class="cell" :title="'当前版本：v' + version"></cell>
                 <cell class="cell" title="赏个好评呗"></cell>
             </group>
             <router-link class="tip" to="./agreement_terms">用户协议及使用条款</router-link>
@@ -21,6 +19,7 @@
 
     import { XHeader, Actionsheet, TransferDom, ButtonTab, ButtonTabItem } from 'vux'
     import { Cell, CellBox, CellFormPreview, Group, Badge } from 'vux'
+    import { mapState, mapActions, mapMutations } from 'vuex'
 
     export default {
         components: {
@@ -34,26 +33,19 @@
             CellBox,
             Badge,
         },
+        computed: {
+            ...mapState(["version"]),
+        },
         data () {
             return {
-                version: {},
-                isNewest: false,
+                
             }
         },
         activated(){
-            let params = new FormData()
-            this.$post("getApkVersion", params, (data) => {
-                let serviceVersionCode = data.serviceVersionCode
-                this.version = JSON.parse(window.android.getVersion_android())
-                this.isNewest = serviceVersionCode == this.version.versionCode
-            })
+
         },
         methods: {
-            download(){
-                if(!this.isNewest){
-                    window.android.download_android()
-                }
-            },
+
         },
     }
 

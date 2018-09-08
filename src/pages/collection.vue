@@ -9,13 +9,24 @@
                     <a v-show="item.follow == 1" @click.stop="no_follow(item.towerUserId, index)">已关注</a>
                 </div>
                 <div v-show="item.title" class="card-title text-ellipsis">{{item.title}}</div>
-                <div v-show="item.content" class="card-desc" :class="item.contentType == '0'? 'text-ellipsis12':'text-ellipsis2'">{{item.content}}</div>
+                <div v-show="item.content && item.contentType != 6" class="card-desc" :class="item.contentType == '0'? 'text-ellipsis12':'text-ellipsis2'">{{item.content}}</div>
                 <div v-if="item.contentType == 2 || item.contentType == 3" class="video-box">
                     <img :src="item.videoImg" class="video-img" alt="">
                     <span class="play-btn iconfont icon-bofang"  @click.stop="openVideo(item.videoUrl, item.videoImg)"></span>
                 </div>
-                <div v-if="item.contentType == 1" class="picture-box">
-                    <img :src="item.imgUrl_1" alt="">
+                <!-- 图片 -->
+                <div v-if="item.imgUrls.length" class="thumbnail-box">
+                    <div v-if="item.imgUrls.length > 1" class="thumbnail" :style="{backgroundImage: 'url(' + imgItem + ')' }" 
+                        v-for="(imgItem, imgIndex) in item.imgUrls" :key="imgIndex" @click.stop="viewPicture(item.imgUrls, imgIndex)"></div>
+                    <div v-if="item.imgUrls.length == 1" class="thumbnail-one" @click.stop="viewPicture(item.imgUrls, 0)">
+                        <img :src="item.imgUrls[0]" alt="">
+                    </div>
+                </div>
+                <div style="overflow: hidden;">
+                    {{item.position}}
+                    <img class="fr" v-if="item.scene != '0' && item.scene" :src="'/static/scene' + item.scene + '.png'" width="20"/>
+                    <img class="fr" v-if="item.weather != '0' && item.weather" :src="'/static/weather' + item.weather + '.png'" width="20"/>
+                    <img class="fr" v-if="item.mood != '0' && item.mood" :src="'/static/mood' + item.mood + '.png'" width="20"/>
                 </div>
                 <div class="handle">{{longTime(item.createDate)}}
                     <i v-show="item.praise != 1" class="iconfont icon-dianzan1" @click.stop="praise(item.towerContentId, index)"></i>
@@ -64,11 +75,6 @@
         methods: {
             //  收藏
             collection(id, index){
-                if(!this.$store.state.towerUserId){
-                    this.toastSuccess("请先登录")
-                    this.$router.push("./login")
-                    return
-                }
                 let params = new FormData()
                 params.append('towerContentId', id)
                 this.$post("collection", params, (data) => {
@@ -86,11 +92,6 @@
             },
             //  关注
             follow(id, index){
-                if(!this.$store.state.towerUserId){
-                    this.toastSuccess("请先登录")
-                    this.$router.push("./login")
-                    return
-                }
                 let params = new FormData()
                 params.append('towerUserId_fans', id)
                 this.$post("follow", params, (data) => {
@@ -107,11 +108,6 @@
             },
             //  点赞
             praise(id, index){
-                if(!this.$store.state.towerUserId){
-                    this.toastSuccess("请先登录")
-                    this.$router.push("./login")
-                    return
-                }
                 let params = new FormData()
                 params.append('towerContentId', id)
                 this.$post("praise", params, (data) => {
