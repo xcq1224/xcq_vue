@@ -6,16 +6,18 @@ import router from './router'
 import store from './store'
 import axios from 'axios'
 import App from './App'
-import  { ConfirmPlugin, ToastPlugin, AlertPlugin, LoadingPlugin } from 'vux'
+import  { ConfirmPlugin, ToastPlugin, AlertPlugin, LoadingPlugin   } from 'vux'
 import 'lib-flexible/flexible.js'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import Bridge from './config/bridge.js'
+
 //  定位
 import "./js/geolocation.min"
 
 //  富文本编辑器
 import initRichText from './js/edit';  
 initRichText();
+
 //  video.js
 require('video.js/dist/video-js.css')
 require('vue-video-player/src/custom-theme.css')
@@ -31,93 +33,10 @@ Vue.config.productionTip = false
 Vue.use(ConfirmPlugin)
 Vue.use(ToastPlugin)
 Vue.use(AlertPlugin )
-Vue.use(VueAwesomeSwiper)
 Vue.use(LoadingPlugin )
+Vue.use(VueAwesomeSwiper)
 Vue.prototype.$bridge = Bridge
 
-/**------------------------------------ios回调方法------------------------------------------------- */
-window.shareResult = function(channel_id,share_channel,share_url) {
-    var content = channel_id+","+share_channel+","+share_url;
-    alert(content);
-}
-//  登录成功回调
-window.loginResult = function(res){
-    let data = JSON.parse(res)
-    store.state.towerUserId = data.towerUserId
-    store.state.avatar = data.icon
-    store.state.userName = data.name
-    let nextUrl = store.state.nextUrl
-    if(nextUrl){
-        store.state.nextUrl = ''
-        router.push(nextUrl)
-    }else{
-        store.state.isRouterAlive = false
-        Vue.nextTick(() => (store.state.isRouterAlive = true))
-    }
-}
-//  获取当前版本
-window.sendVersion = function(res){
-    store.state.version = res
-}
-//  支付成功回调
-window.alipayResult = function(res){
-    if(res == "9000"){
-        alert('支付成功')
-    }else if(res != '6001'){
-        alert('支付失败')
-    }
-}
-
-//  刷新当前路由
-// Vue.prototype.reload = function(){
-//     this.$store.state.isRouterAlive = false
-//     this.$nextTick(() => (this.$store.state.isRouterAlive = true))
-// }
-
-/**------------------------------------调用ios方法------------------------------------------------- */
-Vue.prototype.login = function(){
-    window.webkit.messageHandlers.login.postMessage(null);
-}
-//  支付
-Vue.prototype.alipay = function(towerUserId, towerContentId, contentType){
-    let params = {
-        "towerUserId": towerUserId,
-        "towerContentId": towerContentId,
-        "contentType": contentType
-    }
-    window.webkit.messageHandlers.alipay.postMessage(params);
-}
-
-//  分享
-Vue.prototype.share = function(title, descr, thumbImage, webpageUrl){
-    let params = {
-        "title": title || '塔兮',
-        "descr": descr || '',
-        "thumbImage": 'http://web.towerxi.com/apk/towerx.png',
-        "webpageUrl": 'http://ios.towerxi.com/share?id' + webpageUrl
-    }
-    window.webkit.messageHandlers.share.postMessage(params);
-}
-//  分享
-Vue.prototype.shareResume = function(title, descr, thumbImage, webpageUrl){
-    let params = {
-        "title": title || '塔兮',
-        "descr": descr || '',
-        "thumbImage": 'http://web.towerxi.com/apk/towerx.png',
-        "webpageUrl": 'http://ios.towerxi.com/share_resume?id' + webpageUrl
-    }
-    window.webkit.messageHandlers.share.postMessage(params);
-}
-
-//  跳转页面
-Vue.prototype.goTo = function(url){
-    if(this.$store.state.towerUserId){
-        this.$router.push(url)
-    }else{
-        this.$store.state.nextUrl = url
-        this.login()
-    }
-}
 //  获取数组长度
 Vue.prototype.length = function(arr){
     return arr.length
@@ -133,9 +52,18 @@ Vue.prototype.toastSuccess = function(text, width){
     })
 }
 
+// document.addEventListener('plusready', function(){
+//     //  打开视频弹窗
+//     Vue.prototype.openVideo = function(videoUrl, videoImg){
+//         this.$store.state.showVideo = true
+//         this.$store.state.videoUrl = videoUrl
+//         this.$store.state.videoImg = videoImg
+//     }
+// });
+
 //  失败提示
 Vue.prototype.toastFail = function(text, width){
-    this.$vux.toast.show({
+    this.$vux.toast.show({ 
         text: '<span style="color:#f90">' + text + '</span>',
         type: "text",
         width: width || '100px',
@@ -152,6 +80,16 @@ Vue.prototype.openVideo = function(videoUrl, videoImg){
 }
 
 //  打开图片弹窗
+Vue.prototype.openPicture = function(index, img1, img2, img3){
+    let pictureList = []
+    if(img1) pictureList.push(img1)
+    if(img2) pictureList.push(img2)
+    if(img3) pictureList.push(img3)
+    this.$store.state.pictureList = pictureList
+    this.$store.state.showPicture = true
+    this.$store.state.pictureIndex = index
+}
+//  打开图片弹窗
 Vue.prototype.viewPicture = function(pictureList, index){
     this.$store.state.pictureList = pictureList
     this.$store.state.showPicture = true
@@ -161,24 +99,51 @@ Vue.prototype.viewPicture = function(pictureList, index){
 //  跳转到详情
 Vue.prototype.toDetail = function(id, type, status){
     let str = status ? '&status=' + status : '&status=0'
-    // if(type == 3){
-    //     this.$router.push('./detail?id=' + id + str)
-    // }else{
-    //     this.$router.push('./bit_detail?id=' + id + str)
-    // }
+//  if(type == 3){
+//      this.$router.push('./detail?id=' + id + str)
+//  }else{
+//      this.$router.push('./bit_detail?id=' + id + str)
+//  }
     if(type == 6){
         this.$router.push('./article_detail?id=' + id + str)
     }else{
         this.$router.push('./bit_detail?id=' + id + str)
     }
 },
+//  跳转页面
+Vue.prototype.goTo = function(url){
+    if(this.$store.state.towerUserId){
+        this.$router.push(url)
+    }else{
+        this.$store.state.nextUrl = url
+        this.$router.push("./login")
+    }
+},
 //  跳转到个人主页
 Vue.prototype.toHomepage = function(id){
     this.$router.push('./homepage?id=' + id)
 },
+//  分享
+Vue.prototype.share = function(title, descr, thumbImage, webpageUrl, type){
+    title = title || '塔兮'
+    descr = descr || ''
+    thumbImage = 'http://web.towerxi.com/apk/towerx.png'
+    webpageUrl = 'http://web.towerxi.com/share?id=' + webpageUrl
+    // webpageUrl = 'http://123.207.255.96/tower/share?id=' + webpageUrl
+    window.android.share(title, descr, thumbImage, webpageUrl, type)
+}
+//  分享简历
+Vue.prototype.shareResume = function(title, descr, thumbImage, webpageUrl, type){
+    title = title || '塔兮'
+    descr = descr || ''
+    thumbImage = 'http://web.towerxi.com/apk/towerx.png'
+    webpageUrl = 'http://web.towerxi.com/share_resume?id=' + webpageUrl
+    // webpageUrl = 'http://123.207.255.96/tower/share?id=' + webpageUrl
+    window.android.share(title, descr, thumbImage, webpageUrl, type)
+}
 
 /**
- * 
+ * 秒转化为分
  * @param {*} val 秒钟
  */
 Vue.prototype.secont2minute = function(val){
@@ -188,6 +153,7 @@ Vue.prototype.secont2minute = function(val){
   s = s<10? '0'+s : s
   return m + ':' + s;  
 }
+
 /**
  * 时间间隔
  * @param {时间戳} t2 
@@ -253,7 +219,7 @@ Vue.prototype.post = function(url, params, success, error){
                 this.$vux.toast.show({
                     type: 'text',
                     width: '200px',
-                    text: '网络异常，请稍后再试！',
+                    text: data.msg,
                 })
             }
         }else{
@@ -298,6 +264,85 @@ Vue.prototype.$post = function(action, params, success, error){
     })
 }
 
+// document.addEventListener("plusready", function() {  
+//     // 注册返回按键事件  
+//     alert(4)
+//     plus.key.addEventListener('backbutton', function() {  
+//         // 事件处理  
+//         alert(4)
+//         window.history.back();
+//     }, false);  
+// }); 
+/**
+ * 使用 HTML5 的 History 新 API pushState 来曲线监听 Android 设备的返回按钮
+ * XBack.listen(function(){
+    alert('oh! you press the back button');
+  });
+ */
+// ;!function(pkg, undefined){
+//     var STATE = 'x-back';
+//     var element;
+//     var onPopState = function(event){
+//       event.state === STATE && fire();
+//     }
+//     var record = function(state){
+//       history.pushState(state, null, location.href);
+//     }
+//     var fire = function(){
+//       var event = document.createEvent('Events');
+//       event.initEvent(STATE, false, false);
+//       element.dispatchEvent(event);
+//     }
+//     var listen = function(listener){
+//       element.addEventListener(STATE, listener, false);
+//     }
+//     ;!function(){
+//       element = document.createElement('span');
+//       window.addEventListener('popstate', onPopState);
+//       this.listen = listen;
+//       record(STATE);
+//     }.call(window[pkg] = window[pkg] || {});
+//   }('XBack');
+//   XBack.listen(function(){
+//     alert('back');
+//   });
+
+    // var XBack = {};
+	// (function(XBack) {
+	// 	XBack.STATE = 'x - back';
+	// 	XBack.element;
+ 
+	// 	XBack.onPopState = function(event) {
+	// 		event.state === XBack.STATE && XBack.fire();
+	// 		XBack.record(XBack.STATE); //初始化事件时，push一下
+	// 	};
+ 
+	// 	XBack.record = function(state) {
+	// 		history.pushState(state, null, location.href);
+	// 	};
+ 
+	// 	XBack.fire = function() {
+	// 		var event = document.createEvent('Events');
+	// 		event.initEvent(XBack.STATE, false, false);
+	// 		XBack.element.dispatchEvent(event);
+	// 	};
+ 
+	// 	XBack.listen = function(listener) {
+	// 		XBack.element.addEventListener(XBack.STATE, listener, false);
+	// 	};
+ 
+	// 	XBack.init = function() {
+	// 		XBack.element = document.createElement('span');
+	// 		window.addEventListener('popstate', XBack.onPopState);
+	// 		XBack.record(XBack.STATE);
+	// 	};
+ 
+	// })(XBack); // 引入这段js文件
+ 
+	// XBack.init();
+	// XBack.listen(function() {
+    //     alert(3)
+    // });
 
 /* eslint-disable no-new */
 new Vue({
@@ -306,12 +351,23 @@ new Vue({
   created: function(){
     //在页面加载时读取localStorage里的状态信息
     localStorage.getItem("userMsg") && this.$store.replaceState(Object.assign(this.$store.state,JSON.parse(localStorage.getItem("userMsg"))));
-    //  重新加载时关闭视频弹窗
-    this.$store.state.showVideo = false
     //在页面刷新时将vuex里的信息保存到localStorage里
     window.addEventListener("beforeunload",()=>{
         localStorage.setItem("userMsg",JSON.stringify(this.$store.state))
     })
+    //  设置页面高度解决键盘顶起footer
+    document.documentElement.style.height = document.documentElement.clientHeight + 'px'
+    //  android返回本地的数据
+    let data = JSON.parse(window.android.isLogin())
+    if(data.isLogin == 'true'){
+        this.$store.state.towerUserId = data.towerUserId
+        this.$store.state.avatar = data.icon
+        this.$store.state.userName = data.name
+    }
+    
+    //  重新加载时关闭视频弹窗
+    this.$store.state.showVideo = false
+    this.$store.state.showPicture = false
   },
   render: h => h(App)
 }).$mount('#app-box')

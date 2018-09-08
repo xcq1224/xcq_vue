@@ -75,7 +75,7 @@
             follow(id, index){
                 if(!this.$store.state.towerUserId){
                     this.toastSuccess("请先登录")
-                    this.login()
+                    this.$router.push("./login")
                     return
                 }
                 let params = new FormData()

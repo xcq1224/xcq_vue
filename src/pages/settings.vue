@@ -13,7 +13,7 @@
             <div class="empty-box"></div> -->
             <group gutter='0'>
                 <!-- <cell class="cell" is-link title="清除缓存" @click.native="clear" value="100M"></cell> -->
-                <cell class="cell" is-link title="意见反馈" link="./feedback"></cell>
+                <cell class="cell" is-link title="意见反馈" @click.native="goTo('./feedback')"></cell>
                 <cell class="cell" is-link title="关于塔兮" link="./about"></cell>
             </group>
             <div class="empty-box"></div>
@@ -71,7 +71,7 @@
                     onCancel () {},
                     onConfirm () {
                         that.$store.state.towerUserId = ''
-                        window.webkit.messageHandlers.logout.postMessage(null);
+                        window.android.logoff()
                         that.$router.go(-1)
                     }
                 })

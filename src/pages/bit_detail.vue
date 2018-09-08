@@ -1,6 +1,6 @@
 <template>
     <div class="page"> 
-        <x-header class="pst" :left-options="{backText: ''}" :right-options="{showMore: true}" @on-click-more="sharePage">点滴详情</x-header>
+        <x-header class="pst" :left-options="{backText: ''}" :right-options="{showMore: true}" @on-click-more="showShare = true">点滴详情</x-header>
         <div class="main">
             <div class="hot-card">
                 <div class="user-info">
@@ -59,13 +59,31 @@
                 </div>
             </div>
         </popup>
+        <popup v-model="showShare">
+            <div class="popup">
+                <div class="share-box">
+                    <p class="title">请选择分享平台</p>
+                    <div class="share-items">
+                        <div class="item" @click="sharePage('0')">
+                            <div><img src="../assets/session.png" alt=""></div>
+                            <p>微信</p>
+                        </div>
+                        <div class="item" @click="sharePage('1')">
+                            <div><img src="../assets/icon_res_download_moments.png" alt=""></div>
+                            <p>微信朋友圈</p>
+                        </div>
+                    </div>
+                    <p class="cancel" @click="showShare = false">取消分享</p>
+                </div>
+            </div>
+        </popup>
     </div>
 </template>
 
 <script>
     import { XHeader, Actionsheet, TransferDom, ButtonTab, ButtonTabItem, XInput, Popup } from 'vux'
     import { Tab, TabItem, Sticky, XButton, Swiper, SwiperItem } from 'vux'
-    import { setTimeout } from 'timers';    
+	import { setTimeout } from 'timers';
 
     export default {
         components: {
@@ -85,8 +103,8 @@
         data () {
             return {
                 type: '0',
-                showMenus: false,
                 showPop: false,
+                showShare: false,
                 commonText: '',
                 query: {},      //  页面get参数
                 params: {},     //  内容详细信息
@@ -102,12 +120,12 @@
         },
         methods: {
             //  转发
-            sharePage(){
+            sharePage(type){
                 let title = this.params.title
                 let descr = this.params.content
                 let thumbImage = this.params.imgUrl_1
                 let webpageUrl = this.params.towerContentId
-                this.share(title, descr, thumbImage, webpageUrl)
+                this.share(title, descr, thumbImage, webpageUrl, type)
             },
             //  获取详情数据
             getDetail(){
@@ -129,7 +147,8 @@
             //  准备发表评论（判断是否登录）
             toSend(){
                 if(!this.$store.state.towerUserId){
-                    this.login()
+                    this.toastSuccess("请先登录")
+                    this.$router.push("./login")
                     return
                 }
                 this.showPop=true
@@ -158,13 +177,14 @@
             //  关注
             follow(id){
                 if(!this.$store.state.towerUserId){
-                    this.login()
+                    this.toastSuccess("请先登录")
+                    this.$router.push("./login")
                     return
                 }
                 let params = new FormData()
                 console.log(id)
                 params.append('towerUserId_fans', id)
-                this.post("http://106.14.7.242:8080/tower/app/account!follow.action", params, (data) => {
+                this.$post("follow", params, (data) => {
                     this.params.follow = '1'
                 })
             },
@@ -173,14 +193,16 @@
                 let params = new FormData()
                 console.log(id)
                 params.append('towerUserId_fans', id)
-                this.post("http://106.14.7.242:8080/tower/app/account!no_follow.action", params, (data) => {
+                this.$post("no_follow", params, (data) => {
                     this.params.follow = '0'
                 })
+                
             },
             //  收藏
             collection(id){
                 if(!this.$store.state.towerUserId){
-                    this.login()
+                    this.toastSuccess("请先登录")
+                    this.$router.push("./login")
                     return
                 }
                 let params = new FormData()
@@ -200,7 +222,8 @@
             //  点赞
             praise(id){
                 if(!this.$store.state.towerUserId){
-                    this.login()
+                    this.toastSuccess("请先登录")
+                    this.$router.push("./login")
                     return
                 }
                 let params = new FormData()
@@ -386,5 +409,4 @@
         line-height: 30px;
     }
 </style>
-
 

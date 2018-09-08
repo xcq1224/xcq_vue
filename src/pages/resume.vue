@@ -1,6 +1,6 @@
 <template>
     <div class="page"> 
-        <x-header class="pst" :left-options="{backText: ''}" :right-options="{showMore: true}" @on-click-more="sharePage">我的简历</x-header>
+        <x-header class="pst" :left-options="{backText: ''}" :right-options="{showMore: true}" @on-click-more="showShare = true">我的简历</x-header>
         <div class="main">
             <div class="userInfo">
                 <img :src="data.icon" alt="">
@@ -34,6 +34,24 @@
                 </div>
             </div>
         </div>
+        <popup v-model="showShare">
+            <div class="popup">
+                <div class="share-box">
+                    <p class="title">请选择分享平台</p>
+                    <div class="share-items">
+                        <div class="item" @click="sharePage('0')">
+                            <div><img src="../assets/session.png" alt=""></div>
+                            <p>微信</p>
+                        </div>
+                        <div class="item" @click="sharePage('1')">
+                            <div><img src="../assets/icon_res_download_moments.png" alt=""></div>
+                            <p>微信朋友圈</p>
+                        </div>
+                    </div>
+                    <p class="cancel" @click="showShare = false">取消分享</p>
+                </div>
+            </div>
+        </popup>
     </div>
 </template>
 
@@ -63,6 +81,7 @@
             return {
                 //  search
                 data: {},    //  页面显示数据     
+                showShare: false,
             }
         },
         mounted() {
@@ -79,10 +98,10 @@
                 })
             },
             //  转发
-            sharePage(){
+            sharePage(type){
                 let descr = this.data.name + '的简历'
                 let webpageUrl = this.$store.state.towerUserId
-                this.shareResume('', descr, '', webpageUrl)
+                this.shareResume('', descr, '', webpageUrl, type)
             },
         },
     }

@@ -1,7 +1,7 @@
 <template>
     <div class="page"> 
         <div class="main">
-            <div class="follow-box">
+        	<div class="follow-box">
                 <div class="follow-item" v-if="index < 3 || followList.length == 4" v-for="(item, index) in followList" :key="index"  @click="toHomepage(item.towerUserId)">
                     <img :src="item.iconUrl" alt="">
                     <p>{{item.name}}</p>
@@ -30,7 +30,7 @@
                         <!-- 图片 -->
                         <div v-if="item.imgUrls.length" class="thumbnail-box">
                             <div v-if="item.imgUrls.length > 1" class="thumbnail" :style="{backgroundImage: 'url(' + imgItem + ')' }" 
-                                v-for="(imgItem, imgIndex) in item.imgUrls" :key="imgIndex" @click.stop="viewPicture(item.imgUrls, imgIndex)"></div>
+                            	v-for="(imgItem, imgIndex) in item.imgUrls" :key="imgIndex" @click.stop="viewPicture(item.imgUrls, imgIndex)"></div>
                             <div v-if="item.imgUrls.length == 1" class="thumbnail-one" @click.stop="viewPicture(item.imgUrls, 0)">
                                 <img :src="item.imgUrls[0]" alt="">
                             </div>
@@ -162,7 +162,7 @@
             this.getFollow()
         },
         methods: {
-            //  获取我关注的人
+        	//  获取我关注的人
             getFollow(){
                 let params = new FormData()
                 this.$post("getfollow", params, (data) => {

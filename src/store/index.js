@@ -17,9 +17,7 @@ const state = {
     showPicture: false,       //  是否显示图片弹框
     pictureList: [],            //  图片列表
     pictureIndex: [],            //  图片index
-    isRouterAlive: true,          //  刷新当前路由
     nextUrl: '',                //  登录后跳转的url
-    version: '',                //  当前版本
 }
 
 const mutations = {

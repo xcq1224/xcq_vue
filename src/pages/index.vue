@@ -36,16 +36,17 @@
                     <div @click="uploadClick('uploadVideo')">
                         <span style="background: #fbce77;"><i class="iconfont icon-paizhao"></i></span>
                         <p>视频</p>
-                        <input class="open-camera" ref="uploadVideo" @change="uploadVideo" v-show="false" type="file" accept="video/*" capture="camera">
+                        <input class="open-camera" ref="uploadVideo" @click="openShooting" @change="uploadVideo" v-show="false" type="file" accept="" capture="microphone">
                     </div>
                     <div @click="uploadClick('uploadPicture')">
                         <span style="background: #86df79;"><i class="iconfont icon-xiangce"></i></span>
                         <p>拍照</p>
-                        <input ref="uploadPicture" @change="uploadPicture" v-show="false" type="file" accept="image/*" capture="camera">  
+                        <input ref="uploadPicture" @change="uploadPicture" v-show="false" @click="openPhoto" type="file" accept="image/*">  
                     </div>
                     <div @click="uploadClick('uploadAlbum')">
                         <span style="background: #86df79;"><i class="iconfont icon-xiangce"></i></span>
                         <p>相册</p>
+                        <!-- <input ref="openAlbum1" @change="openAlbum1" v-show="false" @click="openAlbum" type="file" accept="image/*">   -->
                     </div>
                     <div @click="publish4(4)">
                         <span style="background: #b5e1fe;"><i class="iconfont icon-jinengtechang--"></i></span>
@@ -55,10 +56,10 @@
                         <span style="background: #0084ff;"><i class="iconfont icon-xiangmuxuqiu"></i></span>
                         <p>需求</p>
                     </div>
-                    <!-- <div @click="publishCourse(0)">
+                    <div @click="publishCourse(0)">
                         <span style="background: #cc66cc;"><i class="iconfont icon-kecheng-"></i></span>
                         <p>小课</p>
-                    </div> -->
+                    </div>
                     <div @click="goTo('./publish_article')">
                         <span style="background: #cc66cc;"><i class="iconfont icon-kecheng-"></i></span>
                         <p>文章</p>
@@ -137,7 +138,7 @@
                         <span class="tab fr"><i class="iconfont icon-diqiu"></i>{{searchTabs[searchIndex]}}</span>
                     </popover>
                 </div>
-                <input ref="uploadAlbum" @change="uploadPicture" v-show="false" type="file" accept="image/*" multiple="multiple">
+                <input ref="uploadAlbum" @change="uploadPicture" v-show="false" @click="openAlbum" type="file" accept="image/*" multiple="multiple">
             </div> 
         </popup>
         <popup v-model="show2" height="100%" @on-show="openShow2">
@@ -179,11 +180,11 @@
                 </group>
                 <group gutter='0' title="图片">
                     <div class="img-box">
-                        <!-- <div class="img-item">
-                            <img :src="files[0]" alt="">
+                        <!--<div class="img-item">
+                            <img :src="getUrl(files[0])" alt="">
                             <input class="upload-input" v-show="false" ref="upload5" type="file" @change="upload5" accept="image/*">
                             <i v-show="!files.length" class="iconfont icon-web-icon-1 upload" style="position: absolute;font-size: 40px;top: 10px;left: 18px;color: #ccc;"></i>
-                        </div> -->
+                        </div>-->
                         <div class="img-thumbnail thumbnail" :style="{backgroundImage: 'url(' + imgItem + ')' }" v-for="(imgItem, imgIndex) in files" :key="imgIndex" @click.stop="viewPicture(files, imgIndex)">
                             <span class="del" @click.stop="delImg(imgIndex)">x</span>
                         </div>
@@ -245,7 +246,7 @@ export default {
                 className: '',        //  分类名
                 addText: '',        //  新增分类文字
                 contentType: '',    //  上传类型
-
+                
                 //  定位
                 options : {timeout: 8000},          //  定位超时
                 position: '',                        //  地址
@@ -255,11 +256,10 @@ export default {
                 scene:'0',                           //  场景
                 longitude: '',                      //  经度
                 latitude: '',                       //  维度
-
             }
     },
     methods: {
-        //  文件流转化为url
+    	//  文件流转化为url
         file2path(files){
             let urlList = []
             files.map(item => {
@@ -267,7 +267,7 @@ export default {
             })
             return urlList
         },
-        //发布小课、文章
+    /**********************************发布小课、文章****************************** */
         publishCourse(index){
             this.$vux.confirm.show({
                 title: '塔兮',
@@ -299,11 +299,12 @@ export default {
                 clipboard.destroy()
             })
         },
+    /*****************************************上传文字**************************************** */
         //  上传文字
         publish0(){
             if(!this.$store.state.towerUserId){
                 this.toastSuccess("请先登录")
-                this.login()
+                this.$router.push("./login")
             }else{
                 this.show1 = true
             }
@@ -312,7 +313,7 @@ export default {
         publish4(index){
             if(!this.$store.state.towerUserId){
                 this.toastSuccess("请先登录")
-                this.login()
+                this.$router.push("./login")
             }else{
                 this.show4 = true
                 this.contentType = index
@@ -327,11 +328,22 @@ export default {
         uploadClick(val){
             if(!this.$store.state.towerUserId){
                 this.toastSuccess("请先登录")
-                this.login()
+                this.$router.push("./login")
             }else{
                 this.$refs[val].click()
-                this.$refs[val].click()
             }
+        },
+        //  打开拍摄
+        openShooting(){
+            window.android.video()
+        },
+        //  打开拍照
+        openPhoto(){
+            window.android.camera()
+        },
+        //  打开相册
+        openAlbum(){
+            window.android.storage()
         },
         //  播放视频
         playVideo(){
@@ -339,6 +351,7 @@ export default {
             this.openVideo(videoUrl, this.videoImg)
         },
         
+
 
         // 上传拍摄
         uploadVideo(e){
@@ -359,7 +372,7 @@ export default {
         },
         // 上传相册（把图片添加到files列表里面，打开发布相册弹框并清除input值）
         uploadPicture(e){
-            var that = this;
+        	var that = this;
             const files = e.target.files;
             let n = this.files.length
             let flag = false
@@ -420,24 +433,19 @@ export default {
                 let contentType = 0
                 this.files.map((file, index)=>{
                     params.append('img_'+(index+1) + '_base64', file)
-                    contentType = 1
                 })
-                
+                if(this.files.length){
+                    contentType = 1
+                }
                 if(this.videoFile){
                     params.append('video', this.videoFile)
                     params.append('video_img', this.videoPicture)
                     contentType = 2
                 }
                 params.append('content', this.textarea)
+                params.append('contentType', contentType)
                 params.append('contentStatus ', this.searchIndex)
                 params.append('dribKindName', this.className)
-                params.append('contentType', contentType)
-                params.append('mood', this.mood)
-                params.append('weather', this.weather)
-                params.append('scene', this.scene)
-                params.append('position', this.position)
-                params.append('longitude', this.longitude)
-                params.append('latitude', this.latitude)
                 this.$vux.loading.show({
                     text: '发布中...'
                 })
@@ -446,14 +454,14 @@ export default {
                     this.toastSuccess("上传成功")
                 })
             }else{
-                this.toastFail('请输入文字或上传图片', "200px")
+                this.toastFail('请输入文字或上传图片或上传视频', "200px")
             }
         },
         //  打开选择分类弹框
         openShow2(){
             let params = new FormData()
+            this.classList = []
             this.$post("getdribkind", params, (data) => {
-                this.classList = []
                 data.dribKindList.map(item => {
                     this.classList.push(item.dribKindName)
                 })
@@ -488,7 +496,8 @@ export default {
                 })
             }
         },
-    /****************************技能************************* */
+
+
         //  关闭发布技能弹框
         closeShow4(){
             this.textarea = ''
@@ -522,6 +531,12 @@ export default {
             }
             params.append("textarea", this.textarea)
             params.append("contentType", this.contentType)
+            params.append('mood', this.mood)
+            params.append('weather', this.weather)
+            params.append('scene', this.scene)
+            params.append('position', this.position)
+            params.append('longitude', this.longitude)
+            params.append('latitude', this.latitude)
             this.files.map((file, index)=>{
                 params.append('img_'+(index+1) + '_base64', file)
             })
@@ -533,7 +548,7 @@ export default {
                 this.toastSuccess("上传成功")
             })
         },
-    /***************************************获取定位*********************************** */
+        /***************************************获取定位*********************************** */
             geolocation(){
                 this.$vux.loading.show({
                     text: '定位中...'
@@ -545,7 +560,6 @@ export default {
                 this.longitude = position.lng
                 this.latitude = position.lat
                 var latlon = position.lat + "," + position.lng;
-                //  google地图定位
                 var url = 'http://maps.google.cn/maps/api/geocode/json?latlng='+latlon+'&language=CN';
                 this.$axios({
                     method:"GET",
@@ -563,26 +577,6 @@ export default {
                         this.toastFail('网络异常，请稍后再试', '200px')
                     }
                 )
-            
-                //  百度地图定位
-                // var url = "http://api.map.baidu.com/geocoder/v2/?ak=C93b5178d7a8ebdb830b9b557abce78b&callback=renderReverse&location="+latlon+"&output=json&pois=0";
-                // this.$axios({
-                //     method:"GET",
-                //     dataType: "jsonp", 
-                //     url:url,
-                //     withCredentials: false,
-                // }).then(json => {
-                //     this.$vux.loading.hide()
-                //     if(json.status == 0){
-                //         this.position = json.result.formatted_address;
-                //     }else{
-                //         this.toastFail("定位失败")
-                //     }
-                // }).catch(res=>{
-                //         this.$vux.loading.hide()
-                //         this.toastFail('网络异常，请稍后再试', '200px')
-                //     }
-                // )
             },
             showErr(){
                 this.toastFail("定位失败")
@@ -711,7 +705,8 @@ function canvasDataURL(path, i, obj, callback){
             }
         }
     }
-    .tag-content{
+	
+	.tag-content{
         position: relative;
         .tagBox{
             position: absolute;
@@ -729,6 +724,7 @@ function canvasDataURL(path, i, obj, callback){
             }
         }
     }
+
     .main{
         background: #fff;
         .header{

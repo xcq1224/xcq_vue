@@ -80,7 +80,8 @@ const education_info = r => require.ensure([], () => r(require('@/pages/educatio
 
 
 
-
+//  注册
+const register = r => require.ensure([], () => r(require('@/pages/register')), 'register');
 //  忘记密码
 const forget_password = r => require.ensure([], () => r(require('@/pages/forget_password')), 'forget_password');
 //  完善资料
@@ -91,6 +92,7 @@ const complete_info = r => require.ensure([], () => r(require('@/pages/complete_
 const bit_detail = r => require.ensure([], () => r(require('@/pages/bit_detail')), 'bit_detail');
 //  点滴分类
 const bit_manage = r => require.ensure([], () => r(require('@/pages/bit_manage')), 'bit_manage');
+
 
 
 //  发布小课
@@ -240,6 +242,10 @@ const routes = [
     name: 'education_info',
 		component: education_info
 	},{
+    path: '/register',
+    name: 'register',
+		component: register
+	},{
     path: '/forget_password',
     name: 'forget_password',
 		component: forget_password
@@ -262,8 +268,8 @@ const routes = [
 	},{
     path: '/article',
     name: 'article',
-		component: article
-	},{
+    component: article
+  },{
     path: '/publish_article',
     name: 'publish_article',
 		component: publish_article
@@ -298,6 +304,7 @@ const routes = [
 ]
 
 export default new Router({
+  // base: '/tower/',
 	mode: 'history',
   routes,
 })

@@ -15,15 +15,15 @@
                 </cell>
                 <cell v-show="!towerUserId" class="cell">
                     <img src="../assets/avatar.png" style="border: none" alt="" slot="icon">
-                    <div class="login-box" @click="login">
-                        <a>登录</a> /
-                        <a>注册</a>
+                    <div class="login-box">
+                        <router-link to="./login">登录</router-link> /
+                        <router-link to="./register">注册</router-link>
                     </div>
                 </cell>
             </group>
             <div class="empty-box"></div>
             <group gutter='0'>
-                <cell class="cell" is-link @click.native="goTo('./order')">
+                <cell class="cell" is-link @click.native="goTo('./order')"">
                     <span slot="title"><i class="iconfont icon-hetong2" style="color: #76b662;"></i>我的订单</span>
                 </cell>
                 <cell class="cell" is-link @click.native="goTo('./my_skill')">
@@ -40,6 +40,7 @@
                 </cell>  
             </group>
         </div>
+
     </div>
 </template>
 
@@ -105,6 +106,10 @@
     .main{
         padding-top: 46px;
         background: #fff;
+        .empty-box{
+            height: 10px;
+            background: #f2f2f2;
+        }
         .header .cell{
             padding: 0 15px;
         }
@@ -131,9 +136,6 @@
                 left: 0;
             }
         }
-        .content{
-            background: #fff;
-        }
         .login-box{
             border: 1px solid @baseColor;
             width: 182px;
@@ -144,7 +146,6 @@
             line-height: 40px;
             border-radius: 6px;
         }
-        
     }
 </style>
 

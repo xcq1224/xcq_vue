@@ -58,6 +58,12 @@
                     this.fansList = data.fansList
                 })
             },
+
+            //  跳转到详情
+            toDetail(e){
+                this.chosenTop = document.getElementsByClassName('main')[0].scrollTop;
+                this.$router.push('./detail')
+            },
             //  跳转到个人主页
             toHomepage(id){
                 this.$router.push('./homepage?id=' + id)

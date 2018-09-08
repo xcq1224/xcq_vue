@@ -136,7 +136,7 @@
             toSend(){
                 if(!this.$store.state.towerUserId){
                     this.toastSuccess("请先登录")
-                    this.login()
+                    this.$router.push("./login")
                     return
                 }
                 this.showPop=true
@@ -166,7 +166,7 @@
             follow(id){
                 if(!this.$store.state.towerUserId){
                     this.toastSuccess("请先登录")
-                    this.login()
+                    this.$router.push("./login")
                     return
                 }
                 let params = new FormData()
@@ -189,7 +189,7 @@
             collection(id){
                 if(!this.$store.state.towerUserId){
                     this.toastSuccess("请先登录")
-                    this.login()
+                    this.$router.push("./login")
                     return
                 }
                 let params = new FormData()
@@ -210,7 +210,7 @@
             praise(id){
                 if(!this.$store.state.towerUserId){
                     this.toastSuccess("请先登录")
-                    this.login()
+                    this.$router.push("./login")
                     return
                 }
                 let params = new FormData()

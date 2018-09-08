@@ -17,7 +17,7 @@
                 <!-- 图片 -->
                 <div v-if="item.imgUrls.length" class="thumbnail-box">
                     <div v-if="item.imgUrls.length > 1" class="thumbnail" :style="{backgroundImage: 'url(' + imgItem + ')' }" 
-                        v-for="(imgItem, imgIndex) in item.imgUrls" :key="imgIndex" @click.stop="viewPicture(item.imgUrls, imgIndex)"></div>
+                    	v-for="(imgItem, imgIndex) in item.imgUrls" :key="imgIndex" @click.stop="viewPicture(item.imgUrls, imgIndex)"></div>
                     <div v-if="item.imgUrls.length == 1" class="thumbnail-one" @click.stop="viewPicture(item.imgUrls, 0)">
                         <img :src="item.imgUrls[0]" alt="">
                     </div>
@@ -75,6 +75,11 @@
         methods: {
             //  收藏
             collection(id, index){
+                if(!this.$store.state.towerUserId){
+                    this.toastSuccess("请先登录")
+                    this.$router.push("./login")
+                    return
+                }
                 let params = new FormData()
                 params.append('towerContentId', id)
                 this.$post("collection", params, (data) => {
@@ -92,6 +97,11 @@
             },
             //  关注
             follow(id, index){
+                if(!this.$store.state.towerUserId){
+                    this.toastSuccess("请先登录")
+                    this.$router.push("./login")
+                    return
+                }
                 let params = new FormData()
                 params.append('towerUserId_fans', id)
                 this.$post("follow", params, (data) => {
@@ -108,6 +118,11 @@
             },
             //  点赞
             praise(id, index){
+                if(!this.$store.state.towerUserId){
+                    this.toastSuccess("请先登录")
+                    this.$router.push("./login")
+                    return
+                }
                 let params = new FormData()
                 params.append('towerContentId', id)
                 this.$post("praise", params, (data) => {

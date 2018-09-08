@@ -156,26 +156,28 @@ select:-webkit-autofill {
   text-align: left;
 }
 .thumbnail {
-  text-align: center;
-  overflow: hidden;
-}
-.thumbnail img {
-  position: relative;
-  top: 40px;
-  width: 80px;
-  transform: translateY(-50%);
-}
-.thumbnail-box {
-  overflow: hidden;
-  margin-left: 40px;
-}
-.thumbnail-box .thumbnail {
   width: 80px;
   height: 80px;
   border: 1px solid #eee;
   float: left;
   margin-right: 10px;
   margin-bottom: 10px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.thumbnail img {
+  position: relative;
+  top: 40px;
+  left: 40px;
+  width: 80px;
+  min-width: 80px;
+  min-height: 80px;
+  transform: translate3d(-50%, -50%, 0);
+}
+.thumbnail-box {
+  overflow: hidden;
+  margin-left: 40px;
 }
 .thumbnail-box .thumbnail-one img {
   max-width: 170px;

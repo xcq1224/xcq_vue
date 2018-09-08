@@ -3,7 +3,7 @@
         <div class="main">
             <div class="header">
                 <img src="../assets/logo.png" alt=""><span>塔兮</span>
-                <router-link to="./download" class="open">打开</router-link>
+                <a href="http://towerxi.com/apk/towerX.apk" class="open">打开</a>
             </div>
             <div class="userInfo">
                 <img :src="data.icon" alt="">

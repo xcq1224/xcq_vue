@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <keep-alive>
-      <router-view v-if="isRouterAlive"></router-view>
+      <router-view></router-view>
     </keep-alive>
     <popup v-model="showVideo" height="100%" style="background: rgba(0,0,0,0.8);" @on-hide="closeVideoModal" @on-show="openVideoModal">
         <!-- <div class="showVideo">
@@ -47,7 +47,7 @@ export default {
       Cell,
   },
   computed: {
-    ...mapState(['showVideo', "videoUrl", "videoImg", "showPicture", "pictureList", "isRouterAlive"]),
+    ...mapState(['showVideo', "videoUrl", "videoImg", "showPicture", "pictureList"]),
   },
   data(){
     return {

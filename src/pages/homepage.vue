@@ -43,17 +43,17 @@
                 <!-- 图片 -->
                 <div v-if="item.imgUrls.length" class="thumbnail-box">
                     <div v-if="item.imgUrls.length > 1" class="thumbnail" :style="{backgroundImage: 'url(' + imgItem + ')' }" 
-                        v-for="(imgItem, imgIndex) in item.imgUrls" :key="imgIndex" @click.stop="viewPicture(item.imgUrls, imgIndex)"></div>
+                    	v-for="(imgItem, imgIndex) in item.imgUrls" :key="imgIndex" @click.stop="viewPicture(item.imgUrls, imgIndex)"></div>
                     <div v-if="item.imgUrls.length == 1" class="thumbnail-one" @click.stop="viewPicture(item.imgUrls, 0)">
                         <img :src="item.imgUrls[0]" alt="">
                     </div>
                 </div>
                 <div style="overflow: hidden;">
-                    {{item.position}}
-                    <img class="fr" v-if="item.scene != '0' && item.scene" :src="'/static/scene' + item.scene + '.png'" width="20"/>
-                    <img class="fr" v-if="item.weather != '0' && item.weather" :src="'/static/weather' + item.weather + '.png'" width="20"/>
-                    <img class="fr" v-if="item.mood != '0' && item.mood" :src="'/static/mood' + item.mood + '.png'" width="20"/>
-                </div>
+	                {{item.position}}
+	                <img class="fr" v-if="item.scene != '0' && item.scene" :src="'/static/scene' + item.scene + '.png'" width="20"/>
+	                <img class="fr" v-if="item.weather != '0' && item.weather" :src="'/static/weather' + item.weather + '.png'" width="20"/>
+	                <img class="fr" v-if="item.mood != '0' && item.mood" :src="'/static/mood' + item.mood + '.png'" width="20"/>
+	            </div>
                 <div class="handle">{{longTime(item.createDate)}}
                     <i v-show="item.praise != 1" class="iconfont icon-dianzan1" @click.stop="praise(item.towerContentId, index)"></i>
                     <i v-show="item.praise == 1" class="iconfont icon-yijin13-zan text-red" @click.stop="no_praise(item.towerContentId, index)"></i>
@@ -123,7 +123,7 @@ import { format } from 'url';
             follow(id){
                 if(!this.$store.state.towerUserId){
                     this.toastSuccess("请先登录")
-                    this.login()
+                    this.$router.push("./login")
                     return
                 }
                 let params = new FormData()
@@ -155,7 +155,7 @@ import { format } from 'url';
             collection(id, index){
                 if(!this.$store.state.towerUserId){
                     this.toastSuccess("请先登录")
-                    this.login()
+                    this.$router.push("./login")
                     return
                 }
                 let params = new FormData()
@@ -164,7 +164,7 @@ import { format } from 'url';
                     this.contentList[index].collection = '1'
                 })
             },
-            //  取消收藏    
+            //  取消收藏
             no_collection(id, index){
                 let params = new FormData()
                 console.log(id)
@@ -177,7 +177,7 @@ import { format } from 'url';
             praise(id, index){
                 if(!this.$store.state.towerUserId){
                     this.toastSuccess("请先登录")
-                    this.login()
+                    this.$router.push("./login")
                     return
                 }
                 let params = new FormData()
