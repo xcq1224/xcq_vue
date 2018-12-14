@@ -8,7 +8,7 @@
                     <div class="img-item" @click="uploadClick">
                         <img :src="getUrl(img_1)" alt="">
                         <i v-show="!img_1" class="iconfont icon-web-icon-1 upload" style="position: absolute;font-size: 40px;top: 10px;left: 18px;color: #ccc;"></i>
-                        <input class="upload-input" v-show="false" @click="inputClick" ref="upload" type="file" @change="upload" accept="image/*">
+                        <input class="upload-input" v-show="false" @click="choosePicture" ref="upload" type="file" @change="upload" accept="image/*">
                     </div>
                 </div>
             </group>
@@ -54,9 +54,6 @@
         methods: {
             uploadClick(){
                 this.$refs.upload.click()
-            },
-            inputClick(){
-                window.android.storage()
             },
             upload(e){
                 this.img_1 = e.target.files[0];

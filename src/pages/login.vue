@@ -4,7 +4,7 @@
         <div class="main">
             <img src="../assets/picture2.jpg" alt="">
             <x-input text-align="center" class="input" v-model="phone" placeholder="手机号" type="tel" ref='phone' :show-clear='false'></x-input>
-            <x-input text-align="center" class="input" v-model="password" placeholder="请输入6~20位数字/字母/'.'/'_'的密码" type="password" ref='password' :show-clear='false'></x-input>
+            <x-input text-align="center" class="input" v-model="password" placeholder="请输入密码" type="password" ref='password' :show-clear='false'></x-input>
             <a class="input btn-submit" @click="login">登录</a>
             <p>
                 <router-link to="./register" class="text-base">注册塔兮</router-link>

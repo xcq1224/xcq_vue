@@ -1,22 +1,79 @@
 <template>
     <div class="page"> 
-        <x-header class="pst" :left-options="{backText: ''}">小课</x-header>
+        <x-header class="pst" :left-options="{backText: ''}">技能</x-header>
+        <!-- <div class="subnav pst">
+            <div>
+                <div class="subnav-item" :class="skillType == 0 ? 'active' : ''" @click="skillType = 0">小课</div>
+            </div>
+            <div>
+                <div class="subnav-item" :class="skillType == 1 ? 'active' : ''" @click="skillType = 1">服务</div>
+            </div>
+        </div> -->
+        <tab class="pst" :line-width=2 custom-bar-width="50%" v-model="skillType">
+            <tab-item class="vux-center" :selected="skillType == 0" @click.native="slideTo(0)">小课</tab-item>
+            <tab-item class="vux-center" :selected="skillType == 1" @click.native="slideTo(1)">服务<i class="iconfont icon-xia"></i></tab-item>
+            <tab-item class="vux-center" :selected="skillType == 2" @click.native="slideTo(2)">需求</tab-item>
+        </tab>
         <div class="main">
-            <scroller use-pullup :pullup-config="pullupDefaultConfig" @on-pullup-loading="loadMore(0)"
-                use-pulldown :pulldown-config="pulldownDefaultConfig" @on-pulldown-loading="refresh(0)"
-                lock-x ref="scrollerBottom0" height="100%">
-                <div v-show="isEmpty0">
-                    <div class="chosen-card" @click="toDetail(item.towerContentId, 3)" v-for="(item, index) in skillList0" :key="index">
-                        <img :src="item.videoImg || item.imgUrls[0]">
-                        <p class="title">{{item.title}}</p>
-                        <p>{{item.name}}</p>
-                        <p><span class="num">{{item.learnNum}}</span>人在学<span class="sprice"></span></p>
-                    </div>
-                </div>
-                <div v-show="!isEmpty0">
-                    <div style="text-align: center;">暂无数据</div>
-                </div>
-            </scroller>
+            <swiper v-model="skillType" ref="mySwiper" :show-dots="false" style="height: 100%;" @slideChange="changeTab">
+                <swiper-slide>
+                    <scroller use-pullup :pullup-config="pullupDefaultConfig" @on-pullup-loading="loadMore(0)"
+                        use-pulldown :pulldown-config="pulldownDefaultConfig" @on-pulldown-loading="refresh(0)"
+                        lock-x ref="scrollerBottom0" height="100%">
+                        <div v-show="isEmpty0">
+                            <div class="chosen-card" @click="toDetail(item.towerContentId, 3)" v-for="(item, index) in skillList0" :key="index">
+                                <img :src="item.videoImg || item.imgUrls[0]">
+                                <p class="title">{{item.title}}</p>
+                                <p>{{item.name}}</p>
+                                <p><span class="num">{{item.learnNum}}</span>人在学<span class="sprice"></span></p>
+                            </div>
+                        </div>
+                        <div v-show="!isEmpty0">
+                            <div style="text-align: center;">暂无数据</div>
+                        </div>
+                    </scroller>
+                </swiper-slide>
+                <swiper-slide>
+                    <scroller use-pullup :pullup-config="pullupDefaultConfig" @on-pullup-loading="loadMore(1)"
+                        use-pulldown :pulldown-config="pulldownDefaultConfig" @on-pulldown-loading="refresh(1)"
+                        lock-x ref="scrollerBottom1" height="100%">
+                        <div v-show="isEmpty1">
+                            <div class="chosen-card" @click="goPay(item.towerContentId, 0)" v-for="(item, index) in skillList1" :key="index">
+                                <img :src="item.videoImg || item.imgUrls[0]">
+                                <p class="title">{{item.title}}</p>
+                                <p style="overflow: hidden;">{{item.name}}
+                                    <a @click.stop="toHomepage(item.towerUserId)" v-show="item.follow != 1" class="active text-base fr" style="width:64px;border: 1px solid #0084ff;
+                                        text-align: center;border-radius: 4px;">认识一下</a>
+                                </p>
+                                <p><span class="num">{{item.learnNum}}</span>人在学<span class="sprice">￥{{item.price}}</span></p>
+                            </div>
+                        </div>
+                        <div v-show="!isEmpty1">
+                            <div style="text-align: center;">暂无数据</div>
+                        </div>
+                    </scroller>
+                </swiper-slide>
+                <swiper-slide>
+                    <scroller use-pullup :pullup-config="pullupDefaultConfig" @on-pullup-loading="loadMore(2)"
+                        use-pulldown :pulldown-config="pulldownDefaultConfig" @on-pulldown-loading="refresh(2)"
+                        lock-x ref="scrollerBottom2" height="100%">
+                        <div v-show="isEmpty2">
+                            <div class="chosen-card" @click="goPay(item.towerContentId, 1)" v-for="(item, index) in skillList2" :key="index">
+                                <img :src="item.videoImg || item.imgUrls[0]">
+                                <p class="title">{{item.title}}</p>
+                                <p>{{item.name}}
+                                    <a @click.stop="toHomepage(item.towerUserId)" v-show="item.follow != 1" class="active text-base fr" style="width:64px;border: 1px solid #0084ff;
+                                        text-align: center;border-radius: 4px;">认识一下</a>
+                                </p>
+                                <!-- <p><span class="num">{{item.learnNum}}</span>人在学<span class="sprice">￥{{item.price}}</span></p> -->
+                            </div>
+                        </div>
+                        <div v-show="!isEmpty2">
+                            <div style="text-align: center;">暂无数据</div>
+                        </div>
+                    </scroller>
+                </swiper-slide>
+            </swiper>
         </div>
         <!-- 筛选 -->
         <div v-show="popup1" class="filter-wrap" @click="popup1 = false">
@@ -96,8 +153,13 @@
         mounted(){
             this.$nextTick(() => {
                 this.$refs.scrollerBottom0.reset({top: 0})
+                this.$refs.scrollerBottom1.reset({top: 0})
+                this.$refs.scrollerBottom2.reset({top: 0})
             })
             this.getSkillList(0,0)
+            this.getSkillList(1,0)
+            this.getSkillList(2,0)
+            this.getSkillCategorys()
         },
         activated(){
             
@@ -222,7 +284,7 @@
         }
     }
     .main{
-        padding-top: 46px;
+        padding-top: 97px;
         background: #f2f2f2;
         font-size: 12px;
         .vux-slider{

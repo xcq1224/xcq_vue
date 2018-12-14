@@ -63,6 +63,10 @@ const feedback = r => require.ensure([], () => r(require('@/pages/feedback')), '
 const about = r => require.ensure([], () => r(require('@/pages/about')), 'about');
 //  用户协议及使用条款款
 const agreement_terms = r => require.ensure([], () => r(require('@/pages/agreement_terms')), 'agreement_terms');
+//  塔兮隐私政策
+const privacyPolicy = r => require.ensure([], () => r(require('@/pages/privacyPolicy')), 'privacyPolicy');
+//  塔兮币
+const coin = r => require.ensure([], () => r(require('@/pages/coin')), 'coin');
 
 
 //  我的订单
@@ -73,11 +77,20 @@ const my_skill = r => require.ensure([], () => r(require('@/pages/my_skill')), '
 const collection = r => require.ensure([], () => r(require('@/pages/collection')), 'collection');
 //  个人资料
 const personal_info = r => require.ensure([], () => r(require('@/pages/personal_info')), 'personal_info');
+//  自拍这标签
+const show = r => require.ensure([], () => r(require('@/pages/show')), 'show');
 //  工作信息
 const work_info = r => require.ensure([], () => r(require('@/pages/work_info')), 'work_info');
 //  教育信息
 const education_info = r => require.ensure([], () => r(require('@/pages/education_info')), 'education_info');
-
+//  查看赞
+const view1 = r => require.ensure([], () => r(require('@/pages/view1')), 'view1');
+//  查看评论
+const view2 = r => require.ensure([], () => r(require('@/pages/view2')), 'view2');
+//  查看收藏
+const view3 = r => require.ensure([], () => r(require('@/pages/view3')), 'view3');
+//  我的屏蔽
+const shield = r => require.ensure([], () => r(require('@/pages/shield')), 'shield');
 
 
 //  注册
@@ -218,6 +231,14 @@ const routes = [
     name: 'agreement_terms',
 		component: agreement_terms
 	},{
+    path: '/privacyPolicy',
+    name: 'privacyPolicy',
+		component: privacyPolicy
+	},{
+    path: '/coin',
+    name: 'coin',
+		component: coin
+	},{
     path: '/order',
     name: 'order',
 		component: order
@@ -232,7 +253,27 @@ const routes = [
 	},{
     path: '/personal_info',
     name: 'personal_info',
-		component: personal_info
+    component: personal_info
+  },{
+    path: '/view1',
+    name: 'view1',
+		component: view1
+	},{
+    path: '/view2',
+    name: 'view2',
+		component: view2
+	},{
+    path: '/view3',
+    name: 'view3',
+		component: view3
+	},{
+    path: '/shield',
+    name: 'shield',
+		component: shield
+	},{
+    path: '/show',
+    name: 'show',
+		component: show
 	},{
     path: '/work_info',
     name: 'work_info',

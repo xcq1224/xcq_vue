@@ -1,7 +1,7 @@
 <template>
     <div class="page"> 
         <div class="main">
-            <div class="follow-box">
+        	<div class="follow-box">
                 <div class="follow-item" v-if="index < 3 || followList.length == 4" v-for="(item, index) in followList" :key="index"  @click="toHomepage(item.towerUserId)">
                     <img :src="item.iconUrl" alt="">
                     <p>{{item.name}}</p>
@@ -14,7 +14,7 @@
             <scroller v-show="!isEmpty" use-pullup :pullup-config="pullupDefaultConfig" @on-pullup-loading="loadMore"
                 use-pulldown :pulldown-config="pulldownDefaultConfig" @on-pulldown-loading="refresh"
                 lock-x ref="scrollerBottom" height="-160" @on-scroll="onScroll">
-                <div v-show="contentShowList.length">
+                <div>
                     <div class="hot-card" @click="toDetail(item.towerContentId, item.contentType)" v-for="(item, index) in contentShowList" :key="index">
                         <!-- 用户信息 -->
                         <div class="user-info">
@@ -23,14 +23,14 @@
                         <div v-show="item.title" class="card-title text-ellipsis">{{item.title}}</div>
                         <div v-show="item.content && item.contentType != 6" class="card-desc" :class="item.contentType == '0'? 'text-ellipsis12':'text-ellipsis2'">{{item.content}}</div>
                         <!-- 视频 -->
-                        <div v-if="item.contentType == 2 || item.contentType == 3" class="video-box" :style="{backgroundImage: 'url(' + item.videoImg + ')' }">
-                            <!-- <img class="video-img" :src="item.videoImg" alt=""> -->
-                            <span class="play-btn iconfont icon-bofang" @click.stop="openVideo(item.videoUrl, item.videoImg, item.contentType, item.price, item.buy)"></span>
+                        <div v-if="item.contentType == 2 || item.contentType == 3" class="video-box">
+                            <img class="video-img" :src="item.videoImg" alt="">
+                            <span class="play-btn iconfont icon-bofang" @click.stop="openVideo(item.videoUrl, item.videoImg)"></span>
                         </div>
                         <!-- 图片 -->
                         <div v-if="item.imgUrls.length" class="thumbnail-box">
                             <div v-if="item.imgUrls.length > 1" class="thumbnail" :style="{backgroundImage: 'url(' + imgItem + ')' }" 
-                                v-for="(imgItem, imgIndex) in item.imgUrls" :key="imgIndex" @click.stop="viewPicture(item.imgUrls, imgIndex)"></div>
+                            	v-for="(imgItem, imgIndex) in item.imgUrls" :key="imgIndex" @click.stop="viewPicture(item.imgUrls, imgIndex)"></div>
                             <div v-if="item.imgUrls.length == 1" class="thumbnail-one" @click.stop="viewPicture(item.imgUrls, 0)">
                                 <img :src="item.imgUrls[0]" alt="">
                             </div>
@@ -50,10 +50,6 @@
                             <i v-show="item.collection == 1" class="iconfont icon-guanzhu text-red" @click.stop="no_collection(item.towerContentId, index)"></i>
                         </div> 
                     </div>
-                </div>
-                <div v-show="!contentShowList.length" style="text-align: center;color: #ccc;">
-                    <p><i class="iconfont icon-empty" style="font-size: 100px;"></i></p>
-                    <p style="position: relative;top: -20px;">您还未关注达人，快去关注吧~</p>
                 </div>
             </scroller>
         </div>
@@ -150,6 +146,10 @@
                 pullupDefaultConfig: pullupDefaultConfig,
                 pulldownDefaultConfig: pulldownDefaultConfig,
 
+
+
+                
+
             }
         },
         mounted() {
@@ -162,7 +162,7 @@
             this.getFollow()
         },
         methods: {
-            //  获取我关注的人
+        	//  获取我关注的人
             getFollow(){
                 let params = new FormData()
                 this.$post("getfollow", params, (data) => {
@@ -289,11 +289,6 @@
     }
     .main{
         padding-bottom: 54px;
-    }
-    .video-box{
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center;
     }
     .hot-card{
         padding: 10px 10px 3px;

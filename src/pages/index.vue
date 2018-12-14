@@ -22,7 +22,7 @@
                 </tabbar-item>
                 <tabbar-item link="/mine">
                     <i slot="icon" class="iconfont icon-wode"></i>
-                    <span slot="label">我的</span>
+                    <span slot="label">我的<i v-show="totalNew == 1" class="news"></i></span>
                 </tabbar-item> 
             </tabbar>
         </div>
@@ -38,11 +38,11 @@
                         <p>视频</p>
                         <input class="open-camera" ref="uploadVideo" @click="openShooting" @change="uploadVideo" v-show="false" type="file" accept="" capture="microphone">
                     </div>
-                    <div @click="uploadClick('uploadPicture')">
+                    <!-- <div @click="uploadClick('uploadPicture')">
                         <span style="background: #86df79;"><i class="iconfont icon-xiangce"></i></span>
                         <p>拍照</p>
                         <input ref="uploadPicture" @change="uploadPicture" v-show="false" @click="openPhoto" type="file" accept="image/*">  
-                    </div>
+                    </div> -->
                     <div @click="uploadClick('uploadAlbum')">
                         <span style="background: #86df79;"><i class="iconfont icon-xiangce"></i></span>
                         <p>相册</p>
@@ -52,7 +52,7 @@
                         <span style="background: #b5e1fe;"><i class="iconfont icon-jinengtechang--"></i></span>
                         <p>技能</p>
                     </div>
-                    <div @click="publish4(5)">
+                    <!-- <div @click="publish4(5)">
                         <span style="background: #0084ff;"><i class="iconfont icon-xiangmuxuqiu"></i></span>
                         <p>需求</p>
                     </div>
@@ -63,7 +63,7 @@
                     <div @click="goTo('./publish_article')">
                         <span style="background: #cc66cc;"><i class="iconfont icon-kecheng-"></i></span>
                         <p>文章</p>
-                    </div>
+                    </div> -->
                     <p class="copyText" v-show="false" ref="copy" data-clipboard-text="yunshangtaxi@163.com" @click="copy"></p>
                 </div>
                 <div class="more-handle-footer">
@@ -138,7 +138,7 @@
                         <span class="tab fr"><i class="iconfont icon-diqiu"></i>{{searchTabs[searchIndex]}}</span>
                     </popover>
                 </div>
-                <input ref="uploadAlbum" @change="uploadPicture" v-show="false" @click="openAlbum" type="file" accept="image/*" multiple="multiple">
+                <input ref="uploadAlbum" @change="uploadPicture" v-show="false" @click="choosePicture" type="file" accept="image/*" multiple="multiple">
             </div> 
         </popup>
         <popup v-model="show2" height="100%" @on-show="openShow2">
@@ -204,6 +204,7 @@
 <script>
 import { Tabbar, TabbarItem, Popup, XTextarea, Popover, XHeader, Radio, Group, XInput, Datetime} from 'vux'
 import Clipboard from 'clipboard';
+import jsonp from 'jsonp'
 
 export default {
     components: {
@@ -219,44 +220,55 @@ export default {
         Datetime,
     },
     data() {
-            return {
-                showMore: false,    //  发布选项弹框
+        return {
+            showMore: false,    //  发布选项弹框
 
 
-                show1: false,       //  发布文字、图片弹框
-                showSearch: false,  //  公开选项弹框
-                searchIndex: 0,     //  公开选项
-                searchTabs: ['公开', '塔圈', '自己'],
-                files: [],          //  上传图片
-                textarea: '',       //  发表文字内容
-                videoFile: '',      //  视频文件     
-                videoPicture: '',   //  视频文件图片   
+            show1: false,       //  发布文字、图片弹框
+            showSearch: false,  //  公开选项弹框
+            searchIndex: 0,     //  公开选项
+            searchTabs: ['公开', '塔圈', '自己'],
+            files: [],          //  上传图片
+            textarea: '',       //  发表文字内容
+            videoFile: '',      //  视频文件     
+            videoPicture: '',   //  视频文件图片   
 
-                show2: false,       //  选择分类弹框
-                show3: false,       //  新增分类弹框
+            show2: false,       //  选择分类弹框
+            show3: false,       //  新增分类弹框
 
-                show4: false,       //  发布技能
-                title: '',          //  发布技能标题
-                price: '',          //  发布技能价格
-                datetime: '',       //  截止时间
+            show4: false,       //  发布技能
+            title: '',          //  发布技能标题
+            price: '',          //  发布技能价格
+            datetime: '',       //  截止时间
+            
                 
-                    
 
-                classList: [],      //  分类管理列表
-                className: '',        //  分类名
-                addText: '',        //  新增分类文字
-                contentType: '',    //  上传类型
-                
-                //  定位
-                options : {timeout: 8000},          //  定位超时
-                position: '',                        //  地址
-                tagIndex: 0,                        //  选择标签分类
-                mood: '0',                            //  心情
-                weather: '0',                         //  天气
-                scene:'0',                           //  场景
-                longitude: '',                      //  经度
-                latitude: '',                       //  维度
-            }
+            classList: [],      //  分类管理列表
+            className: '',        //  分类名
+            addText: '',        //  新增分类文字
+            contentType: '',    //  上传类型
+            
+            //  定位
+            options : {timeout: 8000},          //  定位超时
+            position: '',                        //  地址
+            tagIndex: 0,                        //  选择标签分类
+            mood: '0',                            //  心情
+            weather: '0',                         //  天气
+            scene:'0',                           //  场景
+            longitude: '',                      //  经度
+            latitude: '',                       //  维度
+
+            // 是否有新消息
+            totalNew: '0',
+        }
+    },
+    activated(){
+        if(this.$store.state.towerUserId){
+            let params = new FormData()
+            this.$post("getexchange", params, (data) => {
+                this.totalNew = data.totalNew
+            })
+        }
     },
     methods: {
     	//  文件流转化为url
@@ -341,21 +353,22 @@ export default {
         openPhoto(){
             window.android.camera()
         },
-        //  打开相册
-        openAlbum(){
-            window.android.storage()
-        },
         //  播放视频
         playVideo(){
             let videoUrl = this.getUrl(this.videoFile)
             this.openVideo(videoUrl, this.videoImg)
         },
-        
-
-
         // 上传拍摄
         uploadVideo(e){
-            this.videoFile = e.target.files[0];
+            let files = e.target.files
+            var that = this
+            if(files[0].type.indexOf("image") != -1){
+                canvasDataURL(this.getUrl(files[0]), 0, {}, (baseUrl, m) => {
+                    that.files.push(baseUrl)
+                })
+            }else{
+                this.videoFile = files[0];
+            }
             this.show1 = true
             e.target.value = ''
 
@@ -442,10 +455,17 @@ export default {
                     params.append('video_img', this.videoPicture)
                     contentType = 2
                 }
-                params.append('content', this.textarea)
+                let content = this.textarea.replace(/ /g, "&nbsp;&nbsp;");
+                params.append('content', content)
                 params.append('contentType', contentType)
                 params.append('contentStatus ', this.searchIndex)
                 params.append('dribKindName', this.className)
+                params.append('mood', this.mood)
+                params.append('weather', this.weather)
+                params.append('scene', this.scene)
+                params.append('position', this.position)
+                params.append('longitude', this.longitude)
+                params.append('latitude', this.latitude)
                 this.$vux.loading.show({
                     text: '发布中...'
                 })
@@ -529,7 +549,7 @@ export default {
                 }
                 params.append("price", this.price)
             }
-            params.append("textarea", this.textarea)
+            params.append("content", this.textarea)
             params.append("contentType", this.contentType)
             params.append('mood', this.mood)
             params.append('weather', this.weather)
@@ -560,23 +580,36 @@ export default {
                 this.longitude = position.lng
                 this.latitude = position.lat
                 var latlon = position.lat + "," + position.lng;
-                var url = 'http://maps.google.cn/maps/api/geocode/json?latlng='+latlon+'&language=CN';
-                this.$axios({
-                    method:"GET",
-                    url:url,
-                    withCredentials: false,
-                }).then(json => {
+                //  google地图定位
+                // var url = 'http://maps.google.cn/maps/api/geocode/json?latlng='+latlon+'&language=CN';
+                // this.$axios({
+                //     method:"GET",
+                //     url:url,
+                //     withCredentials: false,
+                // }).then(json => {
+                //     this.$vux.loading.hide()
+                //     if(json.data.status=='OK'){
+                //         this.position = json.data.results[0].formatted_address;
+                //     }else{
+                //         this.toastFail("定位失败")
+                //     }
+                // }).catch(res=>{
+                //         this.$vux.loading.hide()
+                //         this.toastFail('网络异常，请稍后再试', '200px')
+                //     }
+                // )
+                //  百度地图定位
+                var url = "http://api.map.baidu.com/geocoder/v2/?ak=C93b5178d7a8ebdb830b9b557abce78b&callback=renderReverse&location="+latlon+"&output=json&pois=0";
+                jsonp(url, null, (err, data) => {
                     this.$vux.loading.hide()
-                    if(json.data.status=='OK'){
-                        this.position = json.data.results[0].formatted_address;
-                    }else{
-                        this.toastFail("定位失败")
-                    }
-                }).catch(res=>{
-                        this.$vux.loading.hide()
+                    if(err){
                         this.toastFail('网络异常，请稍后再试', '200px')
+                    }else{
+                        let addressComponent = data.result.addressComponent
+                        this.position = addressComponent.province + addressComponent.city
+                        // this.position = addressComponent.province + addressComponent.city + addressComponent.district
                     }
-                )
+                })
             },
             showErr(){
                 this.toastFail("定位失败")
@@ -611,7 +644,7 @@ function canvasDataURL(path, i, obj, callback){
             quality = obj.quality;
         }
         // quality值越小，所绘制出的图像越模糊
-        var base64 = canvas.toDataURL('image/jpeg', quality);
+        var base64 = canvas.toDataURL('image/jpeg');
         // 回调函数返回base64的值
         callback(base64, i);
     }
@@ -644,10 +677,18 @@ function canvasDataURL(path, i, obj, callback){
                 top: 0;
             }
         }
+        .news{
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: red;
+            border-radius: 50%;
+            top: 8px;
+            right: 24px;
+        }
     }  
     //  上传类型样式
     .more-handle{
-        height: 250px;
         padding-top: 35px;
         background: #fff;
         overflow: hidden;
@@ -676,6 +717,7 @@ function canvasDataURL(path, i, obj, callback){
             position: relative;
             border-top: 1px solid #ddd;
             text-align: center;
+            height: 36px;
             &:before{
                 position: absolute;
                 top: 0;

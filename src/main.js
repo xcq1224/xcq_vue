@@ -41,6 +41,31 @@ Vue.prototype.$bridge = Bridge
 Vue.prototype.length = function(arr){
     return arr.length
 }
+
+//  字符串转数组
+Vue.prototype.toArray = function(str){
+    if(str){
+        return str.split(",")
+    }else{
+        return []
+    }
+}
+
+//  内容格式化
+Vue.prototype.getFormatContent = function(content){
+    content = content.replace(/\r/g, "<br/>");
+    var regexp = /(((https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/ig;
+    // var regexp = /(http:\/\/|https:\/\/)((w|=|?|.|\/|&|-)+)/g;
+    // var regexp = /(https:\/\/[\w.\/]+)(?![^<]+>)/gi;
+    content = content.replace(regexp,function($url){
+        return "<a class='text-base' href='" + $url + "' target='_blank'>" + $url + "</a>";
+    });
+    // console.log(content)
+    // content = content.replace(/&lt;/g, "<")
+    // content = content.replace(/&gt;/g, ">")
+    this.$refs.content.innerHTML = content
+},
+
 //  成功提示
 Vue.prototype.toastSuccess = function(text, width){
     this.$vux.toast.show({
@@ -72,11 +97,16 @@ Vue.prototype.toastFail = function(text, width){
     })
 }
 
+//  选择系统图片
+Vue.prototype.choosePicture = function(){
+    window.android.storage()
+}
+
 //  打开视频弹窗
 Vue.prototype.openVideo = function(videoUrl, videoImg){
-    this.$store.state.showVideo = true
     this.$store.state.videoUrl = videoUrl
     this.$store.state.videoImg = videoImg
+    this.$store.state.showVideo = true
 }
 
 //  打开图片弹窗
@@ -104,8 +134,11 @@ Vue.prototype.toDetail = function(id, type, status){
 //  }else{
 //      this.$router.push('./bit_detail?id=' + id + str)
 //  }
+    if(type == 3){
+        str = str + '&title=小课'
+    }
     if(type == 6){
-        this.$router.push('./article_detail?id=' + id + str)
+        this.$router.push('./bit_detail?id=' + id + str)
     }else{
         this.$router.push('./bit_detail?id=' + id + str)
     }
@@ -244,8 +277,9 @@ Vue.prototype.post = function(url, params, success, error){
 Vue.prototype.$post = function(action, params, success, error){
     let url = 'http://towerxi.com/app/account!' + action + '.action'
     if(this.$store.state.towerUserId){
-        console.log(this.$store.state.towerUserId)
-        params.append('towerUserId', this.$store.state.towerUserId)
+        if(!params.has("towerUserId")){
+            params.append('towerUserId', this.$store.state.towerUserId)
+        }
     }
     this.$axios.post(url, params).then(res => {
         this.$vux.loading.hide()

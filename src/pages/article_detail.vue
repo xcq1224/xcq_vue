@@ -16,6 +16,7 @@
                     <i v-show="params.collection != 1" class="iconfont icon-ego-heart" @click.stop="collection(params.towerContentId)"></i>
                     <i v-show="params.collection == 1" class="iconfont icon-guanzhu text-red" @click.stop="no_collection(params.towerContentId)"></i>
                 </div> 
+                <pre ref="pre"></pre>
             </div>
             <div class="comment">
                 <div class="tab"><span>评论</span></div>
@@ -104,8 +105,16 @@
                     this.params = data.content
                     this.commentList = data.commentList
                     let content = data.content.content
-                    content = content.replace(/&lt;/g, "<")
-                    content = content.replace(/&gt;/g, ">")
+                    content = content.replace(/\r/g, "<br/>");
+                    var regexp = /(((https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/ig;
+                    // var regexp = /(http:\/\/|https:\/\/)((w|=|?|.|\/|&|-)+)/g;
+                    // var regexp = /(https:\/\/[\w.\/]+)(?![^<]+>)/gi;
+                    content = content.replace(regexp,function($url){
+                        return "<a class='text-base' href='" + $url + "' target='_blank'>" + $url + "</a>";
+                    });
+                    // console.log(content)
+                    // content = content.replace(/&lt;/g, "<")
+                    // content = content.replace(/&gt;/g, ">")
                     this.$refs.content.innerHTML = content
                 })
             },
@@ -262,6 +271,7 @@
                 padding: 0px 0;
                 line-height: 20px;
                 padding-bottom: 2px;
+                word-break: break-all;
             }
             .handle{
                 color: #ccc;
@@ -377,11 +387,6 @@
     .empty-comment{
         text-align: center;
         line-height: 30px;
-    }
-</style>
-<style lang="less">
-    .article-desc-content img{
-        max-width: 100%;
     }
 </style>
 

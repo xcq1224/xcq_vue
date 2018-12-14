@@ -3,7 +3,7 @@
         <x-header class="pst" :left-options="{backText: ''}">个人资料<a slot="right" @click="save">保存</a></x-header>
         <div class="main">
             <group gutter='0' label-width="100px">
-                <input class="upload-input" v-show="false" @click="inputClick" ref="upload" type="file" @change="upload" accept="image/*">
+                <input class="upload-input" v-show="false" @click="choosePicture" ref="upload" type="file" @change="upload" accept="image/*">
                 <cell class="cell" is-link @click.native="uploadClick">
                     <span slot="title">头像</span>
                     <div slot>
@@ -15,6 +15,9 @@
                     <div slot>{{userInfo.name}}</div>
                 </cell>
                 <x-input title="昵称" v-show="editIndex == 1" v-model="userInfo.name" ref="nick" @on-blur="editIndex = 0"></x-input>
+                <cell class="cell" is-link link="./show">
+                    <div slot="title" style="width: 200px;">展现自己的自拍照和标签</div>
+                </cell>
                 <popup-radio title="性别" :options="sexList" v-model="userInfo.sex"></popup-radio>
                 <!-- <datetime
                     v-model="towerUserBirthday"
@@ -138,9 +141,6 @@
             //  上传头像
             uploadClick(){
                 this.$refs.upload.click()
-            },
-            inputClick(){
-                window.android.storage()
             },
             upload(e){
                 this.file = e.target.files[0];

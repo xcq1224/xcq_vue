@@ -12,7 +12,7 @@
             <x-input text-align="center" class="input" :is-type="secondPassword" required v-model="password1" placeholder="再次输入密码" type="password" ref='password1' :show-clear='false'></x-input>
             <x-input text-align="center" class="input" :min="3" :max="10" required v-model="nick" placeholder="昵称(3~10)字符" ref='nick' :show-clear='false'></x-input>
             <a class="input btn-submit" @click="submit">注册</a>
-            <p class="font12 text-ccc">点击[注册]代表你已阅读并同意塔兮用户协议</p>
+            <p class="font12 text-ccc">点击注册按钮表示您已阅读并同意 <router-link class="text-base" to="./agreement_terms">塔兮协议</router-link> 和 <router-link class="text-base" to="./privacyPolicy">隐私政策</router-link></p>
         </div>
     </div>
 </template>

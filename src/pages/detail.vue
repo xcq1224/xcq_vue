@@ -1,10 +1,9 @@
 <template>
     <div class="page"> 
-        <x-header :left-options="{backText: ''}">市场<span slot="right"><i class="iconfont icon-ego-heart"></i><i class="iconfont icon-dianzan1"></i></span></x-header>
+        <x-header class="pst" :left-options="{backText: ''}" :right-options="{showMore: true}" @on-click-more="showShare = true">市场</x-header>
         <div class="main">
-            <div class="video-box" @click="openVideo(params.videoUrl, params.videoImg)" style="margin-top: 0; border-bottom: 1px solid #ddd;">
-                <img class="video-img" :src="params.videoImg" alt="">
-                <span class="play-btn"><i class="iconfont icon-bofang" style="font-size: 30px;"></i></span>
+            <div class="video-box" @click="openVideo(params.videoUrl, params.videoImg)" style="margin-top: 0; border-bottom: 1px solid #ddd;background: #fff;">
+                <img class="video-img" :src="params.imgUrls[0]" alt="" @click.stop="viewPicture(params.imgUrls, 0)">
             </div>
             <tab :line-width=2 v-model="index" custom-bar-width="40%">
                 <tab-item class="vux-center" :selected="index == 0" @click="index = 0">介绍</tab-item>
@@ -14,7 +13,7 @@
                 <swiper-item class="item-desc">
                     <div class="desc-info">
                         <p class="title">{{params.title}}</p>
-                        <p class="price">￥35.00
+                        <p class="price" style="overflow: hidden;"><span v-show="params.price">￥{{params.price}} (仅支持线下交易)</span>
                             <i v-show="params.praise != 1" class="iconfont icon-dianzan1" @click.stop="praise(params.towerContentId)"></i>
                             <i v-show="params.praise == 1" class="iconfont icon-yijin13-zan text-red" @click.stop="no_praise(params.towerContentId)"></i>
                             <i v-show="params.collection != 1" class="iconfont icon-ego-heart" @click.stop="collection(params.towerContentId)"></i>
@@ -26,12 +25,8 @@
                             <a v-show="params.follow == 1" @click.stop="no_follow(params.towerUserId)">已关注</a>
                         </div>
                         <div class="desc">
-                            <p>课程介绍</p>
-                            <p style="color: #777;">课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍</p>
-                            <p>购买须知<br/>该课程为付费系列课程，按课程计划定时更新，每节课程可在开课时学习，也可以反复回放。</p>
-                            <p>该课程为虚拟内容服务，购买成功后盖不支持退款。</p>
-                            <p>版权归作者所有，严禁翻录可侵权，违者将追究法律责任。</p>
-                            <p>如有疑问，可点击下方咨询。</p>
+                            <p>{{query.type == 0 ? '技能介绍' : '需求介绍'}}</p>
+                            <p style="color: #777;">{{params.content}}</p>
                         </div>
                     </div>
                 </swiper-item>
@@ -50,13 +45,6 @@
                 </swiper-item>
             </swiper>
         </div>
-        <div class="footer" v-show="!index">
-            <router-link class="footer-left" to="./advisory">
-                <i class="iconfont icon-zixun"></i>
-                <p>咨询</p>
-            </router-link>
-            <router-link to="./confirm_order" class="footer-right">加入学习</router-link>
-        </div>
         <div class="footer" v-show="index" @click="toSend">
             <div class="footer-right">评论</div>
         </div>
@@ -65,6 +53,24 @@
                 <div class="footer-fixed">
                     <x-input v-model="commonText" class="common-input" ref="common" placeholder="写评论" :show-clear="false"></x-input>
                     <span class="text-base" @click="send">发送</span>
+                </div>
+            </div>
+        </popup>
+        <popup v-model="showShare">
+            <div class="popup">
+                <div class="share-box">
+                    <p class="title">请选择分享平台</p>
+                    <div class="share-items">
+                        <div class="item" @click="sharePage('0')">
+                            <div><img src="../assets/session.png" alt=""></div>
+                            <p>微信</p>
+                        </div>
+                        <div class="item" @click="sharePage('1')">
+                            <div><img src="../assets/icon_res_download_moments.png" alt=""></div>
+                            <p>微信朋友圈</p>
+                        </div>
+                    </div>
+                    <p class="cancel" @click="showShare = false">取消分享</p>
                 </div>
             </div>
         </popup>
@@ -99,6 +105,7 @@
                 commentList: [],    //  评论数据
                 showPop: false,   //  评论弹框
                 commonText: '',     //  评论类容
+                showShare: false,      //   分享弹框
             }
         },
         activated(){
@@ -113,6 +120,15 @@
             // this.getcomment()
         },
         methods: {
+            //  转发
+            sharePage(type){
+                let title = this.params.title
+                let descr = this.params.content
+                let thumbImage = this.params.imgUrls[0]
+                let webpageUrl = this.params.towerContentId
+                this.share(title, descr, thumbImage, webpageUrl, type)
+            },
+
             //  获取详情数据
             getDetail(){
                 let params = new FormData()

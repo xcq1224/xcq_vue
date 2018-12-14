@@ -6,12 +6,13 @@
                 <img src="../assets/logo.png" alt="">
             </div>
             <group gutter='0'>
-                <cell class="cell" :title="'当前版本：v' + version.versionName">
+                <cell class="cell" :title="'当前版本：v1.0'">
                     <div slot="" @click="download">{{isNewest ? "已是最新版本" : "下载最新版本"}}</div>
                 </cell>
-                <cell class="cell" title="赏个好评呗"></cell>
             </group>
-            <router-link class="tip" to="./agreement_terms">用户协议及使用条款</router-link>
+            <div class="tip">
+                <router-link to="./agreement_terms">用户协议</router-link>及<router-link to="./privacyPolicy">隐私政策</router-link>
+            </div>
         </div>
 
     </div>
@@ -42,11 +43,11 @@
         },
         activated(){
             let params = new FormData()
-            this.$post("getApkVersion", params, (data) => {
-                let serviceVersionCode = data.serviceVersionCode
-                this.version = JSON.parse(window.android.getVersion_android())
-                this.isNewest = serviceVersionCode == this.version.versionCode
-            })
+            // this.$post("getApkVersion", params, (data) => {
+            //     let serviceVersionCode = data.serviceVersionCode
+            //     this.version = JSON.parse(window.android.getVersion_android())
+            //     this.isNewest = serviceVersionCode == this.version.versionCode
+            // })
         },
         methods: {
             download(){
@@ -87,6 +88,9 @@
             width: 100%;
             text-align: center;
             color: inherit;
+            a{
+                color: @baseColor;
+            }
         }
     }
 </style>
