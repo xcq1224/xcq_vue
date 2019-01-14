@@ -29,7 +29,7 @@
             </scroller>
             <scroller v-show="!isEmpty" use-pullup :pullup-config="pullupDefaultConfig" @on-pullup-loading="loadMore"
                 use-pulldown :pulldown-config="pulldownDefaultConfig" @on-pulldown-loading="refresh"
-                lock-x ref="scrollerBottom" height="-142" @on-scroll="onScroll">
+                lock-x ref="scrollerBottom" height="-82" @on-scroll="onScroll">
                 <div class="scroll-box">
                     <div class="hot-card" v-if="!dribKindId && !filterFiled">
                         <div class="thumbnail" :style="{backgroundImage: 'url(' + cardUrls[0] + ')' }" style="margin-right: 5px;"></div>
@@ -305,23 +305,38 @@
             }
         },
         created(){
-            let params = new FormData()
-            this.$post("getusercard", params, (data) => {
-                this.sex = data.sex
-                this.label = this.toArray(data.label)
-                this.cardUrls = data.cardUrls
-            })
+            if(this.$store.state.towerUserId){
+                let params = new FormData()
+                this.$post("getusercard", params, (data) => {
+                    this.sex = data.sex
+                    this.label = this.toArray(data.label)
+                    this.cardUrls = data.cardUrls
+                })
+            }else{
+                this.$store.state.nextUrl = './bit'
+                this.$router.replace("./login")
+            }
         },
         mounted(){
             this.$nextTick(() => {
                 this.$refs.scrollerBottom.reset({top: 0})
             })
-            this.$vux.loading.show()
-            this.loadMore()
-            this.getCity()
+            if(this.$store.state.towerUserId){
+                this.$vux.loading.show()
+                this.loadMore()
+                this.getCity()
+            }else{
+                this.$store.state.nextUrl = './bit'
+                this.$router.replace("./login")
+            }
         },
         activated(){
-            this.getdribkind()
+            if(this.$store.state.towerUserId){
+                this.getdribkind()
+            }else{
+                this.$store.state.nextUrl = './bit'
+                this.$router.replace("./login")
+            }
         },
         deactivated(){
             this.popup5 = false
@@ -632,7 +647,7 @@
 <style lang="less" scoped>
     @import "../style/base_color.less";
     .main{
-        padding: 46px 0 60px;
+        padding-top: 46px;
         background: #fff;
         font-size: 12px;
         .box1 {

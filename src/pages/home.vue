@@ -30,7 +30,7 @@
             <load-more v-show="isEmpty" :show-loading="false" tip="暂无数据" background-color="#fbf9fe"></load-more>
             <scroller v-show="!isEmpty" use-pullup :pullup-config="pullupDefaultConfig" @on-pullup-loading="loadMore"
                 use-pulldown :pulldown-config="pulldownDefaultConfig" @on-pulldown-loading="refresh"
-                lock-x ref="scrollerBottom" height="-190" @on-scroll="onScroll">
+                lock-x ref="scrollerBottom" height="-126" @on-scroll="onScroll">
                 <div>
                     <div class="new-cardd-box" v-for="(item, index) in contentShowList" :key="index">
                         <div class="card-left" @click="toHomepage(item.towerUserId)">
@@ -363,7 +363,7 @@
     }
     .main{
         padding-top: 134px;
-        padding-bottom: 64px;
+        // padding-bottom: 64px;
         background: #fff;
         .title{
             background: #fff;

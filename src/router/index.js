@@ -3,16 +3,26 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
+//  eg: http://web.towerxi.com/index 为首页（home就是index）      http://ios.towerxi.com/bit 为点滴
+
+//  分享点滴
 const share = r => require.ensure([], () => r(require('@/pages/share')), 'share');
 //  我的简历
 const resume = r => require.ensure([], () => r(require('@/pages/resume')), 'resume');
+//  分享简历
 const share_resume = r => require.ensure([], () => r(require('@/pages/share_resume')), 'share_resume');
+//  下载
 const download = r => require.ensure([], () => r(require('@/pages/download')), 'download');
+//  登录
 const login = r => require.ensure([], () => r(require('@/pages/login')), 'login');
 const index = r => require.ensure([], () => r(require('@/pages/index')), 'index');
+//  首页
 const home = r => require.ensure([], () => r(require('@/pages/home')), 'home');
+//  点滴
 const bit = r => require.ensure([], () => r(require('@/pages/bit')), 'bit');
+//  塔圈
 const tower = r => require.ensure([], () => r(require('@/pages/tower')), 'tower');
+//  我的
 const mine = r => require.ensure([], () => r(require('@/pages/mine')), 'mine');
 
 //  消息
@@ -318,6 +328,22 @@ const routes = [
     path: '/article_detail',
     name: 'article_detail',
 		component: article_detail
+	// },{
+  //   path: '/bit',
+  //   name: 'bit',
+	// 	component: bit
+	// },{
+  //   path: '/tower',
+  //   name: 'tower',
+	// 	component: tower
+	// },{
+  //   path: '/mine',
+  //   name: 'mine',
+	// 	component: mine
+	// },{
+  //   path: '/index',
+  //   name: 'index',
+	// 	component: home
 	},{
     path: '/index',
     name: '',

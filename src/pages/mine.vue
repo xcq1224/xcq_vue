@@ -101,18 +101,23 @@
             }
         },
         activated(){
-            let params = new FormData()
-            let that = this
-            this.towerUserId = this.$store.state.towerUserId
-            this.userName = this.$store.state.userName
-            this.avatar = this.$store.state.avatar
             if(this.$store.state.towerUserId){
-                this.$post("getmine", params, (data) => {
-	                this.followNum = data.followNum
-	                this.fansNum = data.fansNum
-	            })
+                let params = new FormData()
+                let that = this
+                this.towerUserId = this.$store.state.towerUserId
+                this.userName = this.$store.state.userName
+                this.avatar = this.$store.state.avatar
+                if(this.$store.state.towerUserId){
+                    this.$post("getmine", params, (data) => {
+                        this.followNum = data.followNum
+                        this.fansNum = data.fansNum
+                    })
+                }
+                this.getNews()
+            }else{
+                this.$store.state.nextUrl = './bit'
+                this.$router.replace("./login")
             }
-            this.getNews()
         },
         // deactivated(){
         //     console.log(3);

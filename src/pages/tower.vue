@@ -13,7 +13,7 @@
             <load-more v-show="isEmpty" :show-loading="false" tip="暂无数据" background-color="#fbf9fe"></load-more>
             <scroller v-show="!isEmpty" use-pullup :pullup-config="pullupDefaultConfig" @on-pullup-loading="loadMore"
                 use-pulldown :pulldown-config="pulldownDefaultConfig" @on-pulldown-loading="refresh"
-                lock-x ref="scrollerBottom" height="-160" @on-scroll="onScroll">
+                lock-x ref="scrollerBottom" height="-106" @on-scroll="onScroll">
                 <div v-show="contentShowList.length">
                     <div class="hot-card" @click="toDetail(item.towerContentId, item.contentType)" v-for="(item, index) in contentShowList" :key="index">
                         <!-- 用户信息 -->
@@ -156,10 +156,20 @@
             this.$nextTick(() => {
                 this.$refs.scrollerBottom.reset({top: 0})
             })
-            this.loadMore()
+            if(this.$store.state.towerUserId){
+                this.loadMore()
+            }else{
+                this.$store.state.nextUrl = './bit'
+                this.$router.replace("./login")
+            }
         },
         activated(){
-            this.getFollow()
+            if(this.$store.state.towerUserId){
+                this.getFollow()
+            }else{
+                this.$store.state.nextUrl = './bit'
+                this.$router.replace("./login")
+            }
         },
         methods: {
             //  获取我关注的人
@@ -288,7 +298,7 @@
         background: @baseColor;
     }
     .main{
-        padding-bottom: 54px;
+        // padding-bottom: 54px;
     }
     .video-box{
         background-size: cover;

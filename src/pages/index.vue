@@ -4,7 +4,7 @@
             <keep-alive>
                 <router-view></router-view>
             </keep-alive>
-            <tabbar>
+            <!-- <tabbar>
                 <tabbar-item selected link="/index">
                     <i slot="icon" class="iconfont icon-shouye"></i>
                     <span slot="label">首页</span>
@@ -24,7 +24,7 @@
                     <i slot="icon" class="iconfont icon-wode"></i>
                     <span slot="label">我的<i v-show="totalNew == 1" class="news"></i></span>
                 </tabbar-item> 
-            </tabbar>
+            </tabbar> -->
         </div>
         <popup v-model="showMore">
             <div class="more-handle">
