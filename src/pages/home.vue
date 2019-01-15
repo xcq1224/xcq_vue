@@ -1,17 +1,14 @@
 <template>
     <div class="page"> 
         <div class="header pst" style="z-index: 500;">
-            <search
-                v-model="value"
-                @on-submit="onSubmit"
-                @on-cancel="refresh"
-                ref="search"
-                class="bg-base"
-                style="position:relative;top:0;z-index: 500;">
+            <search v-if="false" v-model="value" @on-submit="onSubmit" @on-cancel="refresh"
+                ref="search" class="bg-base" style="position:relative;top:0;z-index: 500;">
             </search>
-            <router-link  v-show="false" to="./news" class="news active"><i class="iconfont icon-icon--"></i></router-link>
+            <div class="search-box" @click="showSearch = true">
+                <i class="weui-icon-search"></i>  名字、标签、内容、服务、课程
+            </div>
         </div>
-        <div class="tab pst">
+        <div class="tab pst" v-show="showSubTab">
             <router-link to="./featured" class="tab-item">
                 <p style="background: #ff9900;"><i class="iconfont icon-shichang"></i></p>
                 <span>小课</span>
@@ -28,10 +25,10 @@
         <div class="empty pst" style="height: 4px;background: #ddd;"></div>
         <div class="main" style="overflow: hidden;">
             <load-more v-show="isEmpty" :show-loading="false" tip="暂无数据" background-color="#fbf9fe"></load-more>
-            <scroller v-show="!isEmpty" use-pullup :pullup-config="pullupDefaultConfig" @on-pullup-loading="loadMore"
+            <scroller class="scroll-box" v-show="!isEmpty" use-pullup :pullup-config="pullupDefaultConfig" @on-pullup-loading="loadMore"
                 use-pulldown :pulldown-config="pulldownDefaultConfig" @on-pulldown-loading="refresh"
                 lock-x ref="scrollerBottom" height="-126" @on-scroll="onScroll">
-                <div>
+                <div @touchstart="touchstart" @touchend="touchend" @touchmove="touchmove">
                     <div class="new-cardd-box" v-for="(item, index) in contentShowList" :key="index">
                         <div class="card-left" @click="toHomepage(item.towerUserId)">
                             <div class="card-img"  :style="{backgroundImage: 'url(' + item.userCardUrl + ')' }"></div>
@@ -60,6 +57,25 @@
                 </div>
             </scroller>
         </div>
+        <popup v-model="showSearch" height="100%" @on-show="searchFocus" @on-hide="showSearch=false">
+            <div class="searchPopup">
+                <search
+                    v-model="value"
+                    @on-submit="onSubmit"
+                    @on-cancel="showSearch = false"
+                    ref="search"
+                    class=""
+                    style="position:relative;top:0;z-index: 500;">
+                </search>
+                <div class="hotSearch">
+                    <p class="title">热门搜索</p>
+                    <div>
+                        <!-- <a><i class="iconfont icon-remen"></i>流行色</a> -->
+                        <a v-for="item in hotList" :key="item.id">{{item.keyword}}</a>
+                    </div>
+                </div>
+            </div>
+        </popup>
     </div>
 </template>
 
@@ -109,11 +125,17 @@
                 this.$refs.scrollerBottom.reset({top: 0})
             })
             this.loadMore()
+            this.getHotKey()
         },
         data () {
             return {
+            /******************************二级tab的显示与隐藏************************* */
+                touchstartY: 0,
+                touchendY: 0,
+                showSubTab: true,
                 //  search
                 results: [],
+                hotList: [],            //  热门词
                 searchList: [{
                   index: 1,
                   list: [{'title': 'sdgjksjdg', 'content': 'atqrqw'},{'title': 'sdgjksjdg', 'content': 'atqrqw'}]
@@ -149,12 +171,30 @@
                 //  刷新、加载
                 pullupDefaultConfig: pullupDefaultConfig,
                 pulldownDefaultConfig: pulldownDefaultConfig,
+
+                showSearch: false,      //  是否显示搜索框
             }
         },
         activated(){
             
         },
         methods: {
+            /****************************搜索框*********************************** */
+            //  弹出搜索框时聚焦
+            searchFocus(){
+                setTimeout(() => {
+                    this.$refs.search.setFocus()
+                }, 100)
+            },
+            //  获取热门关键词
+            getHotKey(){
+                let params = new FormData()
+                this.$post("getHotSearch", params, (data) => {
+                    this.hotList = data.hotList
+                })
+            },
+
+
             or(a,b){
                 return a || b;
             },
@@ -199,6 +239,7 @@
             },
             //  搜索
             onSubmit () {
+                this.showSearch = false
                 this.$refs.search.setBlur()
                 let params = new FormData()
                 params.append("keyword", this.value)
@@ -231,6 +272,20 @@
             },
             //  内容滚动触发
             onScroll(e){
+            },
+            touchstart(e){
+                this.touchstartY = e.touches[0].pageY
+            },
+            touchmove(e){
+                this.touchendY = e.touches[0].pageY
+            },
+            touchend(e){
+                console.log(this.touchendY - this.touchstartY)
+                if(this.touchendY - this.touchstartY > 90){
+                    this.showSubTab = true
+                }else if(this.touchendY - this.touchstartY < -90){
+                    this.showSubTab = false
+                }
             },
 
             //  收藏
@@ -311,34 +366,9 @@
         background: @baseColor;
     }
     .header{
-        background: #b5e1fe;
+        background: @baseColor;
         display: flex;
         height: 46px;
-        .search{
-            flex: 1;
-            .weui-search-bar{
-                background: #b5e1fe;
-            }
-        }
-        .news{
-            line-height: 46px;
-            padding-right: 13px;
-            color: #fff;
-            position: relative;
-            i{
-                font-size: 24px;
-            }
-            &.active:after{
-                content: '';
-                position: absolute;
-                top: 10px;
-                right: 15px;
-                width: 6px;
-                height: 6px;
-                border-radius: 50%;
-                background: red;
-            }
-        }
     }
     .tab{
         background: #fff;
@@ -362,7 +392,8 @@
         }
     }
     .main{
-        padding-top: 134px;
+        // padding-top: 134px;
+        padding-top: 46px;
         // padding-bottom: 64px;
         background: #fff;
         .title{
@@ -373,6 +404,9 @@
                 color: #f36;
                 font-weight: normal;
             }
+        }
+        .scroll-box{
+            padding-top: 88px;
         }
     }
     .search-tab{
@@ -407,6 +441,7 @@
                 background-position: center;
                 border: 1px solid #ddd;
                 margin: 0 auto 10px;
+                border-radius: 6px;
             }
             p a{
                 background: #fe7129;
@@ -487,6 +522,7 @@
                 width: 100%;
                 display: flex;
                 background: rgba(51, 51, 51, 0.6);
+                align-items: center;
                 .icon-box{
                     text-align: center;
                     padding-left: 6px;
@@ -506,6 +542,15 @@
         }
     }
 
+    .search-box{
+        border: 8px solid @baseColor;
+        width: 100%;
+        background: #fff;
+        text-align: center;
+        line-height: 30px;
+        border-radius: 40px;
+    }
+
     // video::-webkit-media-controls-enclosure {
     //     /*禁用播放器控制栏的样式*/
     //     // display: none !important;
@@ -520,6 +565,57 @@
     //     /*禁用播放器控制栏的样式*/
     //     display: none;
     // }
+</style>
+<style lang="less">
+    .searchPopup{
+        background: #f5f8f9;
+        height: 100%;
+        .weui-search-bar{
+            background: #fff;
+        }
+        .weui-search-bar__cancel-btn{
+            color: #aaaaaa;
+        }
+        .weui-search-bar__form{
+            background: #fff;
+        }
+        .weui-search-bar__form:after{
+            border-color: #fff;
+        }
+        .weui-search-bar__box{
+            background: #f0f0f0;
+            border-radius: 28px;
+            .weui-search-bar__input{
+                color: #b5b5b5;
+            }
+        }
+        .hotSearch{
+            background: #fff;
+            padding: 0 10px;
+            .title{
+                color: #232424;
+                padding: 6px 10px;
+            }
+            >div{
+                overflow: hidden;
+                a{
+                    float: left;
+                    border: 0.026667rem solid #eee;
+                    line-height: 20px;
+                    font-size: 12px;
+                    border-radius: 20px;
+                    padding: 5px 8px;
+                    margin-bottom: 10px;
+                    margin-right: 10px;
+                    color: #484848;
+                    i{
+                        color: #ff2741;
+                        font-size: 14px;
+                    }
+                } 
+            }
+        }
+    }
 </style>
 
 

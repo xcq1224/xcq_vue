@@ -120,6 +120,8 @@ const bit_manage = r => require.ensure([], () => r(require('@/pages/bit_manage')
 
 //  发布小课
 const smallClass = r => require.ensure([], () => r(require('@/pages/smallClass')), 'smallClass');
+//  发布拍摄
+const publish_shot = r => require.ensure([], () => r(require('@/pages/publish_shot')), 'publish_shot');
 //  发布文章
 const article = r => require.ensure([], () => r(require('@/pages/article')), 'article');
 //  发布文章
@@ -315,7 +317,11 @@ const routes = [
 	},{
     path: '/smallClass',
     name: 'smallClass',
-		component: smallClass
+    component: smallClass
+  },{
+    path: '/publish_shot',
+    name: 'publish_shot',
+		component: publish_shot
 	},{
     path: '/article',
     name: 'article',
