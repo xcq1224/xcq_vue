@@ -101,6 +101,7 @@
             }
         },
         activated(){
+            alert(JSON.stringify(localStorage))
             if(this.$store.state.towerUserId){
                 let params = new FormData()
                 let that = this
@@ -114,9 +115,6 @@
                     })
                 }
                 this.getNews()
-            }else{
-                this.$store.state.nextUrl = './bit'
-                this.$router.replace("./login")
             }
         },
         // deactivated(){

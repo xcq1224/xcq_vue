@@ -64,14 +64,17 @@
                     this.$store.state.towerUserId = data.towerUserId
                     this.$store.state.avatar = data.icon
                     this.$store.state.userName = data.name
+                    this.$store.state.uid = data.uid
                     window.android.login(data.towerUserId, data.name, data.icon)
-                    let nextUrl = this.$store.state.nextUrl
-                    if(nextUrl){
-                        this.$store.state.nextUrl = ''
-                        this.$router.push(nextUrl)
-                    }else{
-                        this.$router.back(-1)
-                    }
+                    window.android.setImUid(data.uid)
+                    // let nextUrl = this.$store.state.nextUrl
+                    // if(nextUrl){
+                    //     this.$store.state.nextUrl = ''
+                    //     this.$router.push(nextUrl)
+                    // }else{
+                    //     this.$router.back(-1)
+                    // }
+                    this.$router.back(-1)
                 })
             },
         },

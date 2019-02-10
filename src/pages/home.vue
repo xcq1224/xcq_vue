@@ -27,8 +27,8 @@
             <load-more v-show="isEmpty" :show-loading="false" tip="暂无数据" background-color="#fbf9fe"></load-more>
             <scroller class="scroll-box" v-show="!isEmpty" use-pullup :pullup-config="pullupDefaultConfig" @on-pullup-loading="loadMore"
                 use-pulldown :pulldown-config="pulldownDefaultConfig" @on-pulldown-loading="refresh"
-                lock-x ref="scrollerBottom" height="-126" @on-scroll="onScroll">
-                <div @touchstart="touchstart" @touchend="touchend" @touchmove="touchmove">
+                lock-x ref="scrollerBottom" height="-46" @on-scroll="onScroll">
+                <div @touchstart="touchstart" @touchend="touchend" @touchmove="touchmove" style="padding-top: 88px;">
                     <div class="new-cardd-box" v-for="(item, index) in contentShowList" :key="index">
                         <div class="card-left" @click="toHomepage(item.towerUserId)">
                             <div class="card-img"  :style="{backgroundImage: 'url(' + item.userCardUrl + ')' }"></div>
@@ -406,7 +406,7 @@
             }
         }
         .scroll-box{
-            padding-top: 88px;
+            // padding-top: 88px;
         }
     }
     .search-tab{

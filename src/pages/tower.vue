@@ -158,17 +158,11 @@
             })
             if(this.$store.state.towerUserId){
                 this.loadMore()
-            }else{
-                this.$store.state.nextUrl = './bit'
-                this.$router.replace("./login")
             }
         },
         activated(){
             if(this.$store.state.towerUserId){
                 this.getFollow()
-            }else{
-                this.$store.state.nextUrl = './bit'
-                this.$router.replace("./login")
             }
         },
         methods: {

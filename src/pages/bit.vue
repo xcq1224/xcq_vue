@@ -312,9 +312,6 @@
                     this.label = this.toArray(data.label)
                     this.cardUrls = data.cardUrls
                 })
-            }else{
-                this.$store.state.nextUrl = './bit'
-                this.$router.replace("./login")
             }
         },
         mounted(){
@@ -325,17 +322,11 @@
                 this.$vux.loading.show()
                 this.loadMore()
                 this.getCity()
-            }else{
-                this.$store.state.nextUrl = './bit'
-                this.$router.replace("./login")
             }
         },
         activated(){
             if(this.$store.state.towerUserId){
                 this.getdribkind()
-            }else{
-                this.$store.state.nextUrl = './bit'
-                this.$router.replace("./login")
             }
         },
         deactivated(){

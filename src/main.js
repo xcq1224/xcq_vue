@@ -236,35 +236,6 @@ Vue.prototype.formatDate = function(time, fmt){
     for (var k in o)  
         if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));  
     return fmt;  
-  }
-
-//  不用了
-Vue.prototype.post = function(url, params, success, error){
-    if(this.$store.state.towerUserId){
-        console.log(this.$store.state.towerUserId)
-        params.append('towerUserId', this.$store.state.towerUserId)
-    }
-    this.$axios.post(url, params).then(res => {
-        if(res.data.returnStatus == 'false'){
-            if(error){
-                error(res.data)
-            }else{
-                this.$vux.toast.show({
-                    type: 'text',
-                    width: '200px',
-                    text: data.msg,
-                })
-            }
-        }else{
-            success(res.data)
-        }
-    }).catch(error => {
-        this.$vux.toast.show({
-            type: 'text',
-            width: '200px',
-            text: '网络异常，请稍后再试！',
-        })
-    })
 }
 
 /**
@@ -298,85 +269,18 @@ Vue.prototype.$post = function(action, params, success, error){
     })
 }
 
-// document.addEventListener("plusready", function() {  
-//     // 注册返回按键事件  
-//     alert(4)
-//     plus.key.addEventListener('backbutton', function() {  
-//         // 事件处理  
-//         alert(4)
-//         window.history.back();
-//     }, false);  
-// }); 
-/**
- * 使用 HTML5 的 History 新 API pushState 来曲线监听 Android 设备的返回按钮
- * XBack.listen(function(){
-    alert('oh! you press the back button');
-  });
- */
-// ;!function(pkg, undefined){
-//     var STATE = 'x-back';
-//     var element;
-//     var onPopState = function(event){
-//       event.state === STATE && fire();
-//     }
-//     var record = function(state){
-//       history.pushState(state, null, location.href);
-//     }
-//     var fire = function(){
-//       var event = document.createEvent('Events');
-//       event.initEvent(STATE, false, false);
-//       element.dispatchEvent(event);
-//     }
-//     var listen = function(listener){
-//       element.addEventListener(STATE, listener, false);
-//     }
-//     ;!function(){
-//       element = document.createElement('span');
-//       window.addEventListener('popstate', onPopState);
-//       this.listen = listen;
-//       record(STATE);
-//     }.call(window[pkg] = window[pkg] || {});
-//   }('XBack');
-//   XBack.listen(function(){
-//     alert('back');
-//   });
-
-    // var XBack = {};
-	// (function(XBack) {
-	// 	XBack.STATE = 'x - back';
-	// 	XBack.element;
- 
-	// 	XBack.onPopState = function(event) {
-	// 		event.state === XBack.STATE && XBack.fire();
-	// 		XBack.record(XBack.STATE); //初始化事件时，push一下
-	// 	};
- 
-	// 	XBack.record = function(state) {
-	// 		history.pushState(state, null, location.href);
-	// 	};
- 
-	// 	XBack.fire = function() {
-	// 		var event = document.createEvent('Events');
-	// 		event.initEvent(XBack.STATE, false, false);
-	// 		XBack.element.dispatchEvent(event);
-	// 	};
- 
-	// 	XBack.listen = function(listener) {
-	// 		XBack.element.addEventListener(XBack.STATE, listener, false);
-	// 	};
- 
-	// 	XBack.init = function() {
-	// 		XBack.element = document.createElement('span');
-	// 		window.addEventListener('popstate', XBack.onPopState);
-	// 		XBack.record(XBack.STATE);
-	// 	};
- 
-	// })(XBack); // 引入这段js文件
- 
-	// XBack.init();
-	// XBack.listen(function() {
-    //     alert(3)
-    // });
+//  动态title
+router.beforeEach((to, from, next) => {
+    /* 路由发生变化修改页面title */
+    let list = ['bit', 'tower']
+    // let url = './' + name
+    let name = to.name
+    if(list.indexOf(name) != -1 && !store.state.towerUserId){
+        // store.state.nextUrl = url
+        router.push("./login")
+    }
+    next()
+});
 
 /* eslint-disable no-new */
 new Vue({

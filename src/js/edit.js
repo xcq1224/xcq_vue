@@ -53,7 +53,7 @@ export default function () {
         var json = JSON.parse(responseText);
         console.info(json);
         if (!json.ok) {
-          alert(json.msg)
+          console.log(json.msg)
         } else {
           return json.data
         }

@@ -2,82 +2,79 @@
     <div class="page"> 
         <x-header class="pst" :left-options="{backText: ''}" :right-options="{showMore: true}" @on-click-more="showShare = true">{{query.title || '点滴详情'}}</x-header>
         <div class="main">
-            <scroller lock-x height="-46" ref="scrollerBottom">
+            <scroller lock-x height="-92" ref="scrollerBottom">
                 <div>
-                    <div v-for="(item, index) in contentList" :key="index">
-                        <div class="hot-card">
-                            <div class="user-info">
-                                <router-link :to="'./homepage?id=' + item.towerUserId">
-                                    <img :src="item.iconUrl" width="28" height='28' alt="">{{item.name}}<i class='iconfont icon-zhongfu'></i>
-                                </router-link>
-                                <a @click="showPop1 = true" style="float: right;margin-left: 6px;"><i class="iconfont icon-tainjia-copy"></i></a>
-                                <a v-show="item.follow != 1" class="active guanzhu" @click.stop="follow(item.towerUserId)">+关注</a>
-                                <a v-show="item.follow == 1" class="guanzhu" @click.stop="no_follow(item.towerUserId)">已关注</a>
-                            </div>
-                            <div class="card-title">{{item.title}}</div>
-                            <div class="video-box"  v-if="item.videoUrl" @click="openVideo(item.videoUrl, item.videoImg)" :style="{backgroundImage: 'url(' + item.videoImg + ')' }">
-                                <span class="play-btn"><i class="iconfont icon-bofang" style="font-size: 30px;"></i></span>
-                            </div>
-                            <!-- 图片 -->
-                            <div v-if="item.imgUrls && item.imgUrls.length == 1" class="thumbnail-box">
-                                <div class="thumbnail-one" @click.stop="viewPicture(item.imgUrls, 0)">
-                                    <img :src="item.imgUrls[0]" alt="">
-                                </div>
-                            </div>
-                            <div v-if="item.imgUrls && item.imgUrls.length >1" class="thumbnail-box" style="margin-left: 0;">
-                                <div class="thumbnail" :style="{backgroundImage: 'url(' + imgItem + ')' }" 
-                                    v-for="(imgItem, imgIndex) in item.imgUrls" :key="imgIndex" @click.stop="viewPicture(item.imgUrls, imgIndex)"></div>
-                            </div>
-                            <div ref="content" class="card-desc" style="max-height: inherit;"></div>
-                            <div>
-                                {{item.position}}
-                                <img class="fr" v-if="item.scene != '0' && item.scene" :src="'/static/scene' + item.scene + '.png'" width="20"/>
-                                <img class="fr" v-if="item.weather != '0' && item.weather" :src="'/static/weather' + item.weather + '.png'" width="20"/>
-                                <img class="fr" v-if="item.mood != '0' && item.mood" :src="'/static/mood' + item.mood + '.png'" width="20"/>
-                            </div>
-                            <div class="handle">{{longTime(item.createDate)}}
-                                <span v-if="showDelete">
-                                    <i class="iconfont icon-shanchu" @click.stop="deleteContent(item.towerContentId)"></i>
-                                </span>
-                                <span>
-                                    <i v-show="item.praise != 1" class="iconfont icon-dianzan1" @click.stop="praise(item.towerContentId)"></i>
-                                    <i v-show="item.praise == 1" class="iconfont icon-yijin13-zan text-red" @click.stop="no_praise(item.towerContentId)"></i>
-                                    {{item.collectionNum}}
-                                </span>
-                                <span>
-                                    <i class="iconfont icon-pinglun" @click="toSend(item.towerContentId)"></i>
-                                    {{item.commentNum}}
-                                </span>
-                                <span>
-                                    <i v-show="item.collection != 1" class="iconfont icon-ego-heart" @click.stop="collection(item.towerContentId)"></i>
-                                    <i v-show="item.collection == 1" class="iconfont icon-guanzhu text-red" @click.stop="no_collection(item.towerContentId)"></i>
-                                    {{item.praiseNum}}
-                                </span>
-                            </div> 
+                    <div class="hot-card">
+                        <div class="user-info">
+                            <router-link :to="'./homepage?id=' + params.towerUserId">
+                                <img :src="params.iconUrl" width="28" height='28' alt="">{{params.name}}<i class='iconfont icon-zhongfu'></i>
+                            </router-link>
+                            <a @click="showPop1 = true" style="float: right;margin-left: 6px;"><i class="iconfont icon-tainjia-copy"></i></a>
+                            <a v-show="params.follow != 1" class="active guanzhu" @click.stop="follow(params.towerUserId)">+关注</a>
+                            <a v-show="params.follow == 1" class="guanzhu" @click.stop="no_follow(params.towerUserId)">已关注</a>
                         </div>
-                        <div class="comment">
-                            <div class="tab"><span>评论</span></div>
-                            <div v-for="item in commentList" :key="item.id" class="comment-card">
-                                <div class="title">
-                                    <img :src="item.iconUrl" width="28" height='28' alt="">{{item.name}}
-                                    <span>2018-05-04 08:08</span>
-                                </div>
-                                <p>{{item.comment}}</p>
-                            </div>
-                            <div v-if="!commentList[0]">
-                                <p class="empty-comment">暂无评论</p>
+                        <div class="card-title">{{params.title}}</div>
+                        <div class="video-box"  v-if="params.videoUrl" @click="openVideo(params.videoUrl, params.videoImg)" :style="{backgroundImage: 'url(' + params.videoImg + ')' }">
+                            <span class="play-btn"><i class="iconfont icon-bofang" style="font-size: 30px;"></i></span>
+                        </div>
+                        <!-- 图片 -->
+                        <div v-if="params.imgUrls && params.imgUrls.length == 1" class="thumbnail-box">
+                            <div class="thumbnail-one" @click.stop="viewPicture(params.imgUrls, 0)">
+                                <img :src="params.imgUrls[0]" alt="">
                             </div>
                         </div>
-                        <!-- <div class="footer" @click="toSend">评论</div> -->
+                        <div v-if="params.imgUrls && params.imgUrls.length >1" class="thumbnail-box" style="margin-left: 0;">
+                            <div class="thumbnail" :style="{backgroundImage: 'url(' + imgItem + ')' }" 
+                                v-for="(imgItem, imgIndex) in params.imgUrls" :key="imgIndex" @click.stop="viewPicture(params.imgUrls, imgIndex)"></div>
+                        </div>
+                        <div ref="content" class="card-desc" style="max-height: inherit;"></div>
+                        <div>
+                            {{params.position}}
+                            <img class="fr" v-if="params.scene != '0' && params.scene" :src="'/static/scene' + params.scene + '.png'" width="20"/>
+                            <img class="fr" v-if="params.weather != '0' && params.weather" :src="'/static/weather' + params.weather + '.png'" width="20"/>
+                            <img class="fr" v-if="params.mood != '0' && params.mood" :src="'/static/mood' + params.mood + '.png'" width="20"/>
+                        </div>
+                        <div class="handle">{{longTime(params.createDate)}}
+                            <span v-if="showDelete">
+                                <i class="iconfont icon-shanchu" @click.stop="deleteContent(params.towerContentId)"></i>
+                            </span>
+                            <span>
+                                <i v-show="params.praise != 1" class="iconfont icon-dianzan1" @click.stop="praise(params.towerContentId)"></i>
+                                <i v-show="params.praise == 1" class="iconfont icon-yijin13-zan text-red" @click.stop="no_praise(params.towerContentId)"></i>
+                                {{params.collectionNum}}
+                            </span>
+                            <span>
+                                <i class="iconfont icon-pinglun" @click="toSend"></i>
+                                {{params.commentNum}}
+                            </span>
+                            <span>
+                                <i v-show="params.collection != 1" class="iconfont icon-ego-heart" @click.stop="collection(params.towerContentId)"></i>
+                                <i v-show="params.collection == 1" class="iconfont icon-guanzhu text-red" @click.stop="no_collection(params.towerContentId)"></i>
+                                {{params.praiseNum}}
+                            </span>
+                        </div> 
+                    </div>
+                    <div class="comment">
+                        <div class="tab"><span>评论</span></div>
+                        <div v-for="(item, index) in commentList" :key="index" class="comment-card">
+                            <div class="title">
+                                <img :src="item.iconUrl" width="28" height='28' alt="">{{item.name}}
+                                <span>2018-05-04 08:08</span>
+                            </div>
+                            <p>{{item.comment}}</p>
+                        </div>
+                        <div v-if="!commentList[0]">
+                            <p class="empty-comment">暂无评论</p>
+                        </div>
                     </div>
                 </div>
             </scroller>
         </div>
+        <div class="footer" @click="toSend">评论</div>
         <div></div>
         <popup v-model="showPop" @on-show="showPopup">
             <div class="pop-footer">
                 <div class="review-box">
-                    <rater v-model="star"></rater>
                     <x-textarea :height="20" :rows="1" ref="common" class="review-input textarea" autosize placeholder="写评论" v-model="commonText"></x-textarea>
                 </div>
                 <div class="review" @click="send">发送</div> 
@@ -120,7 +117,7 @@
 
 <script>
     import { XHeader, Actionsheet, TransferDom, ButtonTab, ButtonTabItem, XInput, Popup } from 'vux'
-    import { Tab, TabItem, Sticky, XButton, Swiper, SwiperItem, XTextarea, Scroller, Confirm, Rater } from 'vux'
+    import { Tab, TabItem, Sticky, XButton, Swiper, SwiperItem, XTextarea, Scroller, Confirm } from 'vux'
 	import { setTimeout } from 'timers';
 
     export default {
@@ -140,7 +137,6 @@
             XTextarea,
             Scroller,
             Confirm,
-            Rater,
         },
         data () {
             return {
@@ -155,10 +151,6 @@
                 showComplaint: false,       //  投诉
                 opinion: '',                //  投诉内容
                 showDelete: false,          //  是否显示删除按钮
-                contentList: [],          //  内容列表
-
-                currentId: '',      //  当前内容id
-                star: '5',      //  评分
             }
         },
         activated(){
@@ -184,24 +176,23 @@
                 this.showDelete = false
                 let params = new FormData()
                 params.append("towerContentId", this.query.id)
-                this.$post("getcontentsbyid", params, (data) => {
-                    this.params = data.contentList[0]
-                    this.contentList = data.contentList
-                    // this.getFormatContent(data.content.content)
+                this.$post("getcontentbyid", params, (data) => {
+                    this.params = data.content
+                    this.getFormatContent(data.content.content)
+                    this.commentList = data.commentList
                     this.showDelete = this.params.towerUserId == this.$store.state.towerUserId
                 })
             },
             // 显示评论弹框
             showPopup(){
-                this.star = 5
                 this.commonText = ''
-                setTimeout(() =>{
-                    this.$refs.common.focus()
+                let that = this
+                setTimeout(function(){
+                    that.$refs.common.focus()
                 }, 200)
             },
             //  准备发表评论（判断是否登录）
-            toSend(id){
-                this.currentId = id
+            toSend(){
                 this.showPop=true
             },
             //  发表评论
@@ -214,8 +205,7 @@
                 this.showPop = false
                 if(this.commonText){
                     let params = new FormData()
-                    params.append("towerContentId", this.currentId)
-                    params.append("starNum", this.star)
+                    params.append("towerContentId", this.params.towerContentId)
                     params.append("comment", this.commonText)
                     this.$post("comment", params, (data) => {
                         this.getcomment()
@@ -225,7 +215,7 @@
             //  获取评论
             getcomment(){
                 let params = new FormData()
-                params.append("towerContentId", this.currentId)
+                params.append("towerContentId", this.params.towerContentId)
                 this.$post("getcomment", params, (data) => {
                     this.commentList = data.commentList
                 })
@@ -359,10 +349,12 @@
     @import "../style/base_color.less";
     .main{
         padding-top: 46px;
+        padding-bottom: 46px;
         background: #f2f2f2;
         .hot-card{
             padding: 10px 10px 3px;
             background: #fff;
+            margin-bottom: 15px;
             color: #777;
             .user-info{
                 overflow: hidden;
@@ -448,7 +440,7 @@
         }
         .comment{
             background: #fff;
-            margin-bottom: 12px;
+            margin-top: 12px;
             .tab{
                 overflow: hidden;
                 padding-left: 10px;
@@ -485,8 +477,8 @@
     }
     .footer{
         background: @baseColor;
-        // position: absolute;
-        // bottom: 0;
+        position: absolute;
+        bottom: 0;
         width: 100%;
         height: 46px;
         text-align: center;

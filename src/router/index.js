@@ -334,45 +334,45 @@ const routes = [
     path: '/article_detail',
     name: 'article_detail',
 		component: article_detail
-	// },{
-  //   path: '/bit',
-  //   name: 'bit',
-	// 	component: bit
-	// },{
-  //   path: '/tower',
-  //   name: 'tower',
-	// 	component: tower
-	// },{
-  //   path: '/mine',
-  //   name: 'mine',
-	// 	component: mine
-	// },{
-  //   path: '/index',
-  //   name: 'index',
-	// 	component: home
+	},{
+    path: '/bit',
+    name: 'bit',
+		component: bit
+	},{
+    path: '/tower',
+    name: 'tower',
+		component: tower
+	},{
+    path: '/mine',
+    name: 'mine',
+		component: mine
 	},{
     path: '/index',
-    name: '',
-    component: index,
-    children: [
-      {
-        path: '',
-        name: 'home',
-        component: home
-      }, {
-        path: '/bit',
-        name: 'bit',
-        component: bit
-      }, {
-        path: '/tower',
-        name: 'tower',
-        component: tower
-      }, {
-        path: '/mine',
-        name: 'mine',
-        component: mine
-      }
-    ]
+    name: 'index',
+		component: home
+	// },{
+  //   path: '/index',
+  //   name: '',
+  //   component: index,
+  //   children: [
+  //     {
+  //       path: '',
+  //       name: 'home',
+  //       component: home
+  //     }, {
+  //       path: '/bit',
+  //       name: 'bit',
+  //       component: bit
+  //     }, {
+  //       path: '/tower',
+  //       name: 'tower',
+  //       component: tower
+  //     }, {
+  //       path: '/mine',
+  //       name: 'mine',
+  //       component: mine
+  //     }
+  //   ]
 	},
 ]
 

@@ -164,18 +164,12 @@
                 let params = new FormData()
                 console.log(id)
                 params.append('towerUserId_fans', id)
-                this.post("http://106.14.7.242:8080/tower/app/account!follow.action", params, (data) => {
-                    this.params.follow = '1'
-                })
             },
             //  取消关注
             no_follow(id, index){
                 let params = new FormData()
                 console.log(id)
                 params.append('towerUserId_fans', id)
-                this.post("http://106.14.7.242:8080/tower/app/account!no_follow.action", params, (data) => {
-                    this.params.follow = '0'
-                })
             },
             //  收藏
             collection(id){

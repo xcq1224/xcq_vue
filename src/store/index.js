@@ -9,6 +9,7 @@ const state = {
     pictureFiles: '',
     // 2c93b3ca63fd01ea01641160ee8b0042
     towerUserId: '',
+    uid: '',
     avatar: '',             //  用户头像
     userName: '',           //  用户名
     showVideo: false,        //  是否显示视频弹框

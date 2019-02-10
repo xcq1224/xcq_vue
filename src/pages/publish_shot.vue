@@ -259,9 +259,9 @@
 
         /***************************************获取定位*********************************** */
             geolocation(){
-                this.$vux.loading.show({
-                    text: '定位中...'
-                })
+                // this.$vux.loading.show({
+                //     text: '定位中...'
+                // })
                 var geolocation = new qq.maps.Geolocation("OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77", "myapp")
                 geolocation.getLocation(this.showPosition, this.showErr, this.options)
             },
