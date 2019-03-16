@@ -42,7 +42,7 @@
                                 <img :src="item.videoImg || item.imgUrls[0]">
                                 <p class="title">{{item.title}}</p>
                                 <p style="overflow: hidden;">{{item.name}}
-                                    <a @click.stop="toHomepage(item.towerUserId)" v-show="item.follow != 1" class="active text-base fr" style="width:64px;border: 1px solid #0084ff;
+                                    <a @click.stop="toHomepage(item.towerUserId)" v-show="item.follow != 1" class="active text-base fr" style="width:64px;border: 1px solid #008ab1;
                                         text-align: center;border-radius: 4px;">认识一下</a>
                                 </p>
                                 <p><span class="num">{{item.learnNum}}</span>人在学<span class="sprice">￥{{item.price}}</span></p>
@@ -62,7 +62,7 @@
                                 <img :src="item.videoImg || item.imgUrls[0]">
                                 <p class="title">{{item.title}}</p>
                                 <p>{{item.name}}
-                                    <a @click.stop="toHomepage(item.towerUserId)" v-show="item.follow != 1" class="active text-base fr" style="width:64px;border: 1px solid #0084ff;
+                                    <a @click.stop="toHomepage(item.towerUserId)" v-show="item.follow != 1" class="active text-base fr" style="width:64px;border: 1px solid #008ab1;
                                         text-align: center;border-radius: 4px;">认识一下</a>
                                 </p>
                                 <!-- <p><span class="num">{{item.learnNum}}</span>人在学<span class="sprice">￥{{item.price}}</span></p> -->

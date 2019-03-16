@@ -145,7 +145,7 @@ Vue.prototype.toDetail = function(id, type, status){
 },
 //  跳转页面
 Vue.prototype.goTo = function(url){
-    if(this.$store.state.towerUserId){
+    if(localStorage.getItem("towerUserId")){
         this.$router.push(url)
     }else{
         this.$store.state.nextUrl = url
@@ -247,9 +247,9 @@ Vue.prototype.formatDate = function(time, fmt){
  */
 Vue.prototype.$post = function(action, params, success, error){
     let url = 'http://towerxi.com/app/account!' + action + '.action'
-    if(this.$store.state.towerUserId){
+    if(localStorage.getItem("towerUserId")){
         if(!params.has("towerUserId")){
-            params.append('towerUserId', this.$store.state.towerUserId)
+            params.append('towerUserId', localStorage.getItem("towerUserId"))
         }
     }
     this.$axios.post(url, params).then(res => {
@@ -275,7 +275,7 @@ router.beforeEach((to, from, next) => {
     let list = ['bit', 'tower']
     // let url = './' + name
     let name = to.name
-    if(list.indexOf(name) != -1 && !store.state.towerUserId){
+    if(list.indexOf(name) != -1 && !localStorage.getItem("towerUserId")){
         // store.state.nextUrl = url
         router.push("./login")
     }
@@ -298,7 +298,7 @@ new Vue({
     //  android返回本地的数据
     let data = JSON.parse(window.android.isLogin())
     if(data.isLogin == 'true'){
-        this.$store.state.towerUserId = data.towerUserId
+        localStorage.setItem("towerUserId", data.towerUserId)
         this.$store.state.avatar = data.icon
         this.$store.state.userName = data.name
     }

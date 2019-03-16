@@ -81,7 +81,7 @@
         methods: {
             //  收藏
             collection(id, index){
-                if(!this.$store.state.towerUserId){
+                if(!localStorage.getItem("towerUserId")){
                     this.toastSuccess("请先登录")
                     this.$router.push("./login")
                     return
@@ -103,7 +103,7 @@
             },
             //  关注
             follow(id, index){
-                if(!this.$store.state.towerUserId){
+                if(!localStorage.getItem("towerUserId")){
                     this.toastSuccess("请先登录")
                     this.$router.push("./login")
                     return
@@ -124,7 +124,7 @@
             },
             //  点赞
             praise(id, index){
-                if(!this.$store.state.towerUserId){
+                if(!localStorage.getItem("towerUserId")){
                     this.toastSuccess("请先登录")
                     this.$router.push("./login")
                     return

@@ -13,7 +13,7 @@
             </div>
             <div class="publish-video">
                 <input ref="uploadVideo" @click="openShooting" @change="uploadVideo" v-show="false" type="file" accept="" capture="microphone">
-                <div class="iconfont icon-bofang1">
+                <div class="iconfont icon-bofang1" @click="bofang">
                     <img :src="videoPicture" alt="">
                 </div>
                 <video v-show="false" ref="video" @loadeddata="loadVideo" :src="getUrl(videoFile)"></video>
@@ -139,7 +139,7 @@
             this.reprintSource = ''
 
             //  调起摄像机拍摄
-            this.$refs.uploadVideo.click()
+            // this.$refs.uploadVideo.click()
         },
         deactivated(){
             this.$store.state.showPicture = false
@@ -157,6 +157,14 @@
             playVideo(){
                 let videoUrl = this.getUrl(this.videoFile)
                 this.openVideo(videoUrl, this.videoImg)
+            },
+            //  有视频就播放，没有就上传
+            bofang(){
+                if(this.videoFile){
+                    this.playVideo()
+                }else{
+                    this.$refs.uploadVideo.click()
+                }
             },
             // 上传拍摄
             uploadVideo(e){
@@ -346,6 +354,8 @@
                 img{
                     display: block;
                     width: 100%;
+                    min-height: 100px;
+                    border: 1px solid #eee;
                 }
                 &:before{
                     position: absolute;

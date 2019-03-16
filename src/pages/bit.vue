@@ -1,6 +1,6 @@
 <template>
     <div class="page"> 
-        <x-header class="pst" :left-options="{showBack: false}">我的点滴</x-header>
+        <!-- <x-header class="pst" :left-options="{showBack: false}">我的点滴</x-header> -->
         <div class="main">
             <scroller lock-y :scrollbar-x=false>
                 <div class="box1">
@@ -29,7 +29,7 @@
             </scroller>
             <scroller v-show="!isEmpty" use-pullup :pullup-config="pullupDefaultConfig" @on-pullup-loading="loadMore"
                 use-pulldown :pulldown-config="pulldownDefaultConfig" @on-pulldown-loading="refresh"
-                lock-x ref="scrollerBottom" height="-82" @on-scroll="onScroll">
+                lock-x ref="scrollerBottom" height="-36" @on-scroll="onScroll">
                 <div class="scroll-box">
                     <div class="hot-card" v-if="!dribKindId && !filterFiled">
                         <div class="thumbnail" :style="{backgroundImage: 'url(' + cardUrls[0] + ')' }" style="margin-right: 5px;"></div>
@@ -124,12 +124,12 @@
         <!-- 选择分类 -->
         <popup v-model="popup4" height="" style="background: #fbf9fe;">
             <group gutter='0'>
-                <radio :selected-label-style="{color: '#0084FF'}" :options="kinds" v-model="kind" @on-change="modifydribkind"></radio>
+                <radio :selected-label-style="{color: '#008ab1'}" :options="kinds" v-model="kind" @on-change="modifydribkind"></radio>
             </group>
         </popup>
         <!-- 筛选 -->
         <div v-show="popup5" class="filter-wrap" @click="popup5 = false">
-            <div class="filter" style="background: #24ceff;">
+            <div class="filter" style="background: #fff;">
                 <p>
                     <img src="/static/mood1.png" alt="" @click="filter('mood', '1')">
                     <img src="/static/mood2.png" alt="" @click="filter('mood', '2')">
@@ -141,7 +141,7 @@
             </div>
         </div>
         <div v-show="popup6" class="filter-wrap" @click="popup6 = false">
-            <div class="filter" style="background: #24ceff;">
+            <div class="filter" style="background: #fff;">
                 <p>
                     <img src="/static/weather1.png" alt="" @click="filter('weather', '1')">
                     <img src="/static/weather2.png" alt="" @click="filter('weather', '2')">
@@ -153,7 +153,7 @@
             </div>
         </div>
         <div v-show="popup7" class="filter-wrap" @click="popup7 = false">
-            <div class="filter" style="background: #24ceff;">
+            <div class="filter" style="background: #fff;">
                 <p>
                     <img src="/static/scene1.png" alt="" @click="filter('scene', '1')">
                     <img src="/static/scene2.png" alt="" @click="filter('scene', '2')">
@@ -165,7 +165,7 @@
             </div>
         </div>
         <div v-show="popup8" class="filter-wrap" @click="popup8 = false">
-            <div class="filter" style="background: #24ceff;padding-bottom: 0;">
+            <div class="filter" style="background: #fff;padding-bottom: 0;">
                 <scroller v-show="dribKindList.length>5" lock-y :scrollbar-x=false>
                     <div class="box2" :style="'width: '+ 22*(dribKindList.length + 3) +'vw;'">
                         <div :class="dribKindName == '' ? 'ability-item text-base' : 'ability-item'" @click="getDribByKind('', '', '')">
@@ -185,7 +185,7 @@
             </div>
         </div>
         <div v-show="popup9" class="filter-wrap" @click="popup9 = false">
-            <div class="filter" style="background: #24ceff;padding-bottom: 0;display: flex;">
+            <div class="filter" style="background: #fff;padding-bottom: 0;display: flex;">
                 <div class="filter-date" style="flex: 1;">
                     <datetime v-model="startTime" @on-clear="startTime = ''" clear-text="清除" @click.native.stop class="date-custom" format="YYYY-MM-DD"></datetime>
                 </div>
@@ -197,9 +197,10 @@
             </div>
         </div>
         <div v-show="popup10" class="filter-wrap" @click="popup10 = false">
-            <div class="filter city-box" style="background: #24ceff;">
+            <div class="filter city-box" style="background: #fff;">
                 <div>
                     <span class="city-item" v-for="(item, index) in cityList" :key="index" @click="filter('city', item)">{{item}}</span>
+                    <p style="text-align: center;" v-if="!cityList.length" class="city-item">TA好像不太愿意让你知道在哪儿!</p>
                 </div>
             </div>
         </div>
@@ -305,7 +306,7 @@
             }
         },
         created(){
-            if(this.$store.state.towerUserId){
+            if(localStorage.getItem("towerUserId")){
                 let params = new FormData()
                 this.$post("getusercard", params, (data) => {
                     this.sex = data.sex
@@ -318,14 +319,14 @@
             this.$nextTick(() => {
                 this.$refs.scrollerBottom.reset({top: 0})
             })
-            if(this.$store.state.towerUserId){
+            if(localStorage.getItem("towerUserId")){
                 this.$vux.loading.show()
                 this.loadMore()
                 this.getCity()
             }
         },
         activated(){
-            if(this.$store.state.towerUserId){
+            if(localStorage.getItem("towerUserId")){
                 this.getdribkind()
             }
         },
@@ -638,7 +639,6 @@
 <style lang="less" scoped>
     @import "../style/base_color.less";
     .main{
-        padding-top: 46px;
         background: #fff;
         font-size: 12px;
         .box1 {
@@ -841,8 +841,9 @@
         width: 100%;
         .filter{
             background: #fff;
-            margin-top: 86px;
+            margin-top: 40px;
             height: 40px;
+            border-top: 1px solid #ddd; 
             p{
                 padding: 0 15px 0;
                 line-height: 40px;
@@ -859,7 +860,7 @@
         }
         .data_{
             line-height: 40px;
-            color: #fff;
+            color: #008ab1;
             font-weight: bold;
         }
         .date-custom{
@@ -867,6 +868,7 @@
             background: #fff;
             padding: 5px;
             margin: 5px;
+            border: 1px solid #ddd;
         }
     }
     .box2{
@@ -874,7 +876,7 @@
         overflow: hidden;
         text-align: center;
         line-height: 40px;
-        color: #fff;
+        color: #008ab1;
         .ability-item{
             float: left;
             width: 80px;
@@ -889,7 +891,7 @@
         >div{
             overflow: auto;
             height: 50px;
-            color: #fff;
+            color: #008ab1;
             padding-right: 10px;
             span{
                 padding-left: 10px;

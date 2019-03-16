@@ -70,7 +70,7 @@
                     content: '您确定退出吗',
                     onCancel () {},
                     onConfirm () {
-                        that.$store.state.towerUserId = ''
+                        localStorage.setItem("towerUserId", '')
                         window.android.logoff()
                         that.$router.go(-1)
                     }

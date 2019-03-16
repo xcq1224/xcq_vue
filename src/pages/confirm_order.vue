@@ -59,7 +59,7 @@
                 console.log('change', val, label)
             },
             confirmPay(){
-                let towerUserId = this.$store.state.towerUserId
+                let towerUserId = localStorage.getItem("towerUserId")
                 let towerContentId = this.params.towerContentId
                 let contentType = '3'
                 window.android.orderForm_android(towerUserId,towerContentId,contentType);

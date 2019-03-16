@@ -53,7 +53,7 @@
                         <p>技能</p>
                     </div>
                     <!-- <div @click="publish4(5)">
-                        <span style="background: #0084ff;"><i class="iconfont icon-xiangmuxuqiu"></i></span>
+                        <span style="background: #008ab1;"><i class="iconfont icon-xiangmuxuqiu"></i></span>
                         <p>需求</p>
                     </div>
                     <div @click="publishCourse(0)">
@@ -263,7 +263,7 @@ export default {
         }
     },
     activated(){
-        if(this.$store.state.towerUserId){
+        if(localStorage.getItem("towerUserId")){
             let params = new FormData()
             this.$post("getexchange", params, (data) => {
                 this.totalNew = data.totalNew
@@ -314,7 +314,7 @@ export default {
     /*****************************************上传文字**************************************** */
         //  上传文字
         publish0(){
-            if(!this.$store.state.towerUserId){
+            if(!localStorage.getItem("towerUserId")){
                 this.toastSuccess("请先登录")
                 this.$router.push("./login")
             }else{
@@ -323,7 +323,7 @@ export default {
         },
         //  上传技能
         publish4(index){
-            if(!this.$store.state.towerUserId){
+            if(!localStorage.getItem("towerUserId")){
                 this.toastSuccess("请先登录")
                 this.$router.push("./login")
             }else{
@@ -338,7 +338,7 @@ export default {
         },
         //  上传文件
         uploadClick(val){
-            if(!this.$store.state.towerUserId){
+            if(!localStorage.getItem("towerUserId")){
                 this.toastSuccess("请先登录")
                 this.$router.push("./login")
             }else{

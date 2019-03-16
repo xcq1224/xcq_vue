@@ -61,7 +61,7 @@
                 params.append('phone', this.phone)
                 params.append('password', this.password)
                 this.$post("login", params, (data) => {
-                    this.$store.state.towerUserId = data.towerUserId
+                    localStorage.setItem("towerUserId", data.towerUserId)
                     this.$store.state.avatar = data.icon
                     this.$store.state.userName = data.name
                     this.$store.state.uid = data.uid

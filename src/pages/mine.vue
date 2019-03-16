@@ -1,6 +1,5 @@
 <template>
     <div class="has-tabbar page"> 
-        <x-header class="pst" :left-options="{showBack: false}">我的</x-header>
         <div class="main">
             <group gutter='0' class="header">
                 <cell v-show="towerUserId" class="cell" is-link link="./personal_info">
@@ -101,20 +100,25 @@
             }
         },
         activated(){
-            alert(JSON.stringify(localStorage))
-            if(this.$store.state.towerUserId){
+            if(localStorage.getItem("towerUserId")){
                 let params = new FormData()
                 let that = this
-                this.towerUserId = this.$store.state.towerUserId
+                this.towerUserId = localStorage.getItem("towerUserId")
                 this.userName = this.$store.state.userName
                 this.avatar = this.$store.state.avatar
-                if(this.$store.state.towerUserId){
+                if(localStorage.getItem("towerUserId")){
                     this.$post("getmine", params, (data) => {
                         this.followNum = data.followNum
                         this.fansNum = data.fansNum
                     })
                 }
                 this.getNews()
+            }else{
+                this.towerUserId = ''
+                this.userName = ''
+                this.avatar = ''
+                this.followNum = ''
+                this.fansNum = ''
             }
         },
         // deactivated(){
@@ -131,7 +135,7 @@
             },
             //  是否有新消息
             getNews(){
-                if(this.$store.state.towerUserId){
+                if(localStorage.getItem("towerUserId")){
                     let params = new FormData()
                     this.$post("getexchange", params, (data) => {
                         this.praiseNew = data.praiseNew
@@ -148,7 +152,6 @@
 <style lang="less" scoped>
     @import "../style/base_color.less";
     .main{
-        padding-top: 46px;
         background: #fff;
         .empty-box{
             height: 10px;

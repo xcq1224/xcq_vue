@@ -7,7 +7,7 @@
         </x-header>
         <div class="subnav pst">
             <div>
-                <div class="subnav-item" :class="greatManType?'':'active'" @click="getgreatmanlist(0)">职业大咖</div>
+                <div class="subnav-item" :class="greatManType?'':'active'" @click="getgreatmanlist(0)">专业大咖</div>
             </div>
             <div>
                 <div class="subnav-item" :class="!greatManType?'':'active'" @click="getgreatmanlist(1)">学生大牛</div>
@@ -109,7 +109,7 @@
 
             //  关注
             follow(id, index){
-                if(!this.$store.state.towerUserId){
+                if(!localStorage.getItem("towerUserId")){
                     this.toastSuccess("请先登录")
                     this.$router.push("./login")
                     return

@@ -71,7 +71,7 @@
                     <p class="title">热门搜索</p>
                     <div>
                         <!-- <a><i class="iconfont icon-remen"></i>流行色</a> -->
-                        <a v-for="item in hotList" :key="item.id">{{item.keyword}}</a>
+                        <a v-for="item in hotList" :key="item.id" @click="hotClick(item.keyword)">{{item.keyword}}</a>
                     </div>
                 </div>
             </div>
@@ -193,6 +193,11 @@
                     this.hotList = data.hotList
                 })
             },
+            //  点击热门词
+            hotClick(val){
+                this.value = val
+                this.onSubmit()
+            },
 
 
             or(a,b){
@@ -243,7 +248,7 @@
                 this.$refs.search.setBlur()
                 let params = new FormData()
                 params.append("keyword", this.value)
-                params.append("pageNum", this.pageNum)
+                params.append("pageNum", 1)
                 this.$post('search', params, (data)=>{
                     this.contentShowList = [].concat(data.contentList);
                     this.isEmpty = !this.contentShowList.length
@@ -290,7 +295,7 @@
 
             //  收藏
             collection(id, index){
-                if(!this.$store.state.towerUserId){
+                if(!localStorage.getItem("towerUserId")){
                     this.toastSuccess("请先登录")
                     this.$router.push("./login")
                     return
@@ -314,7 +319,7 @@
             },
             //  关注
             follow(id, index){
-                if(!this.$store.state.towerUserId){
+                if(!localStorage.getItem("towerUserId")){
                     this.toastSuccess("请先登录")
                     this.$router.push("./login")
                     return
@@ -335,7 +340,7 @@
             },
             //  点赞
             praise(id, index){
-                if(!this.$store.state.towerUserId){
+                if(!localStorage.getItem("towerUserId")){
                     this.toastSuccess("请先登录")
                     this.$router.push("./login")
                     return

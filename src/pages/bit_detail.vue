@@ -188,7 +188,7 @@
                     this.params = data.contentList[0]
                     this.contentList = data.contentList
                     // this.getFormatContent(data.content.content)
-                    this.showDelete = this.params.towerUserId == this.$store.state.towerUserId
+                    this.showDelete = this.params.towerUserId == localStorage.getItem("towerUserId")
                 })
             },
             // 显示评论弹框
@@ -206,7 +206,7 @@
             },
             //  发表评论
             send(){
-                if(!this.$store.state.towerUserId){
+                if(!localStorage.getItem("towerUserId")){
                     this.toastSuccess("请先登录")
                     this.$router.push("./login")
                     return
@@ -233,7 +233,7 @@
 
             //  关注
             follow(id){
-                if(!this.$store.state.towerUserId){
+                if(!localStorage.getItem("towerUserId")){
                     this.toastSuccess("请先登录")
                     this.$router.push("./login")
                     return
@@ -257,7 +257,7 @@
             },
             //  收藏
             collection(id){
-                if(!this.$store.state.towerUserId){
+                if(!localStorage.getItem("towerUserId")){
                     this.toastSuccess("请先登录")
                     this.$router.push("./login")
                     return
@@ -278,7 +278,7 @@
             },
             //  点赞
             praise(id){
-                if(!this.$store.state.towerUserId){
+                if(!localStorage.getItem("towerUserId")){
                     this.toastSuccess("请先登录")
                     this.$router.push("./login")
                     return
@@ -299,7 +299,7 @@
             },
             //  屏蔽
             shield(){
-                if(!this.$store.state.towerUserId){
+                if(!localStorage.getItem("towerUserId")){
                     this.toastSuccess("请先登录")
                     this.$router.push("./login")
                     return
@@ -312,7 +312,7 @@
                 })
             },
             complaint(){
-                if(!this.$store.state.towerUserId){
+                if(!localStorage.getItem("towerUserId")){
                     this.toastSuccess("请先登录")
                     this.$router.push("./login")
                     return

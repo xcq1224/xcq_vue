@@ -201,7 +201,7 @@
         <!-- 选择分类 -->
         <popup v-model="popup4" height="" style="background: #fbf9fe;">
             <group gutter='0'>
-                <radio :selected-label-style="{color: '#0084FF'}" :options="kinds" v-model="kind" @on-change="modifydribkind"></radio>
+                <radio :selected-label-style="{color: '#008ab1'}" :options="kinds" v-model="kind" @on-change="modifydribkind"></radio>
             </group>
         </popup>
         <!-- 筛选 -->

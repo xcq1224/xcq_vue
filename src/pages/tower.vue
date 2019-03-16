@@ -156,12 +156,12 @@
             this.$nextTick(() => {
                 this.$refs.scrollerBottom.reset({top: 0})
             })
-            if(this.$store.state.towerUserId){
+            if(localStorage.getItem("towerUserId")){
                 this.loadMore()
             }
         },
         activated(){
-            if(this.$store.state.towerUserId){
+            if(localStorage.getItem("towerUserId")){
                 this.getFollow()
             }
         },

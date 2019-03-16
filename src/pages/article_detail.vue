@@ -128,7 +128,7 @@
             },
             //  准备发表评论（判断是否登录）
             toSend(){
-                if(!this.$store.state.towerUserId){
+                if(!localStorage.getItem("towerUserId")){
                     this.login()
                     return
                 }
@@ -157,7 +157,7 @@
 
             //  关注
             follow(id){
-                if(!this.$store.state.towerUserId){
+                if(!localStorage.getItem("towerUserId")){
                     this.login()
                     return
                 }
@@ -173,7 +173,7 @@
             },
             //  收藏
             collection(id){
-                if(!this.$store.state.towerUserId){
+                if(!localStorage.getItem("towerUserId")){
                     this.login()
                     return
                 }
@@ -193,7 +193,7 @@
             },
             //  点赞
             praise(id){
-                if(!this.$store.state.towerUserId){
+                if(!localStorage.getItem("towerUserId")){
                     this.login()
                     return
                 }

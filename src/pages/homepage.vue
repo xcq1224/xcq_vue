@@ -83,7 +83,7 @@
         </div>
         <!-- 筛选 -->
         <div v-show="popup5" class="filter-wrap" @click="popup5 = false">
-            <div class="filter" style="background: #24ceff;">
+            <div class="filter" style="background: #fff;">
                 <p>
                     <img src="/static/mood1.png" alt="" @click="filter('mood', '1')">
                     <img src="/static/mood2.png" alt="" @click="filter('mood', '2')">
@@ -95,7 +95,7 @@
             </div>
         </div>
         <div v-show="popup6" class="filter-wrap" @click="popup6 = false">
-            <div class="filter" style="background: #24ceff;">
+            <div class="filter" style="background: #fff;">
                 <p>
                     <img src="/static/weather1.png" alt="" @click="filter('weather', '1')">
                     <img src="/static/weather2.png" alt="" @click="filter('weather', '2')">
@@ -107,7 +107,7 @@
             </div>
         </div>
         <div v-show="popup7" class="filter-wrap" @click="popup7 = false">
-            <div class="filter" style="background: #24ceff;">
+            <div class="filter" style="background: #fff;">
                 <p>
                     <img src="/static/scene1.png" alt="" @click="filter('scene', '1')">
                     <img src="/static/scene2.png" alt="" @click="filter('scene', '2')">
@@ -119,7 +119,7 @@
             </div>
         </div>
         <div v-show="popup8" class="filter-wrap" @click="popup8 = false">
-            <div class="filter" style="background: #24ceff;padding-bottom: 0;">
+            <div class="filter" style="background: #fff;padding-bottom: 0;">
                 <scroller v-show="dribKindList.length>5" lock-y :scrollbar-x=false>
                     <div class="box2" :style="'width: '+ 22*(dribKindList.length + 1) +'vw;'">
                         <div :class="dribKindName == '' ? 'ability-item text-base' : 'ability-item'" @click="getDribByKind('', '', '')">
@@ -133,7 +133,7 @@
             </div>
         </div>
         <div v-show="popup9" class="filter-wrap" @click="popup9 = false">
-            <div class="filter" style="background: #24ceff;padding-bottom: 0;display: flex;">
+            <div class="filter" style="background: #fff;padding-bottom: 0;display: flex;">
                 <div class="filter-date" style="flex: 1;">
                     <datetime v-model="startTime" @on-clear="startTime = ''" clear-text="清除" @click.native.stop class="date-custom" format="YYYY-MM-DD"></datetime>
                 </div>
@@ -145,9 +145,10 @@
             </div>
         </div>
         <div v-show="popup10" class="filter-wrap" @click="popup10 = false">
-            <div class="filter city-box" style="background: #24ceff;">
+            <div class="filter city-box" style="background: #fff;">
                 <div>
                     <span class="city-item" v-for="(item, index) in cityList" :key="index" @click="filter('city', item)">{{item}}</span>
+                    <p style="text-align: center;" v-if="!cityList.length" class="city-item">TA好像不太愿意让你知道在哪儿!</p>
                 </div>
             </div>
         </div>
@@ -405,7 +406,7 @@
             },
             //  关注
             follow(id){
-                if(!this.$store.state.towerUserId){
+                if(!localStorage.getItem("towerUserId")){
                     this.toastSuccess("请先登录")
                     this.$router.push("./login")
                     return
@@ -426,7 +427,7 @@
             },
             //  屏蔽
             shield(){
-                if(!this.$store.state.towerUserId){
+                if(!localStorage.getItem("towerUserId")){
                     this.toastSuccess("请先登录")
                     this.$router.push("./login")
                     return
@@ -729,7 +730,7 @@
         }
         .data_{
             line-height: 40px;
-            color: #fff;
+            color: #008ab1;
             font-weight: bold;
         }
         .date-custom{
@@ -738,6 +739,7 @@
             padding: 5px;
             margin: 5px;
             display: block;
+            border: 1px solid #ddd;
         }
     }
     .box2{
@@ -745,7 +747,7 @@
         overflow: hidden;
         text-align: center;
         line-height: 40px;
-        color: #fff;
+        color: #008ab1;
         .ability-item{
             float: left;
             width: 80px;
@@ -760,7 +762,7 @@
         >div{
             overflow: auto;
             height: 50px;
-            color: #fff;
+            color: #008ab1;
             padding-right: 10px;
             span{
                 padding-left: 10px;

@@ -92,7 +92,7 @@
         methods: {
             getpersonalvitae() {
                 let params = new FormData()
-                params.append("towerUser_id", this.$store.state.towerUserId)
+                params.append("towerUser_id", localStorage.getItem("towerUserId"))
                 this.$post("getpersonalvitae", params, (data) => {
                     this.data = data
                 })
@@ -100,7 +100,7 @@
             //  转发
             sharePage(type){
                 let descr = this.data.name + '的简历'
-                let webpageUrl = this.$store.state.towerUserId
+                let webpageUrl = localStorage.getItem("towerUserId")
                 this.shareResume('', descr, '', webpageUrl, type)
             },
         },

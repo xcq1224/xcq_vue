@@ -39,8 +39,8 @@ body,
 }
 .attention.active {
   color: #fff;
-  background: #0084FF;
-  border-color: #0084FF;
+  background: #008ab1;
+  border-color: #008ab1;
 }
 .text-ellipsis {
   overflow: hidden;
@@ -97,7 +97,7 @@ a {
   color: #333;
 }
 .text-base {
-  color: #0084FF;
+  color: #008ab1;
 }
 .text-red {
   color: #f00 !important;
@@ -136,7 +136,7 @@ a {
   color: #ccc;
 }
 .weui-dialog__btn_primary {
-  color: #0084FF;
+  color: #008ab1;
 }
 .page .weui-cell:before {
   left: 0;
